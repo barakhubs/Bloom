@@ -26,6 +26,7 @@ $router->get('/partners', [PartnersController::class, 'index']);
 $router->get('/gallery', [GalleryController::class, 'index']);
 $router->get('/blog', [BlogController::class, 'index']);
 $router->get('/blog/{slug}', [BlogController::class, 'show']);
+$router->post('/blog/{slug}/comments', [BlogController::class, 'submitComment']);
 $router->get('/contact', [ContactController::class, 'index']);
 $router->post('/contact', [ContactController::class, 'submit']);
 

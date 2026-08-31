@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS blog_comments (
     post_id INT UNSIGNED NOT NULL,
     author_name VARCHAR(150) NOT NULL,
     author_email VARCHAR(191) NOT NULL,
+    website VARCHAR(255) NULL,
     body TEXT NOT NULL,
     status ENUM('pending', 'approved') NOT NULL DEFAULT 'pending',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
