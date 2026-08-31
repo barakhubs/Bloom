@@ -105,3 +105,22 @@ INSERT INTO gallery_images (album_id, image_path, caption, sort_order) VALUES
     (1, 'img/gallery-4.jpg', NULL, 4),
     (1, 'img/gallery-5.jpg', NULL, 5),
     (1, 'img/gallery-6.jpg', NULL, 6);
+
+-- --------------------------------------------------
+-- blog_posts — the 4 real posts currently live on bloombeyondborders.org/blog/
+-- (bodies lightly expanded from the live site's single-sentence excerpts with
+-- only already-verified organizational context, nothing fabricated)
+-- --------------------------------------------------
+INSERT INTO blog_posts (title, slug, body, featured_image_path, status, published_at) VALUES
+    ('Skills training', 'skills-training',
+     'Practical, hands-on training in vocational and business skills tailored to local market opportunities. Part of Bloom Beyond Borders'' work empowering women in Uganda with the tools to build sustainable income.',
+     'img/event-1.jpg', 'published', '2026-04-13 09:00:00'),
+    ('Entrepreneurship', 'entrepreneurship',
+     'Guidance on starting and growing small businesses, from idea to income, with mentorship support. This initiative connects women with practical guidance to turn skills into lasting economic opportunity.',
+     'img/event-2.jpg', 'published', '2026-04-13 09:00:00'),
+    ('Community networks', 'community-networks',
+     'Connecting women with peers and mentors to foster collaboration, solidarity, and shared growth. Strong community networks help women support each other through every stage of their journey.',
+     'img/event-3.jpg', 'published', '2026-04-13 09:00:00'),
+    ('Financial literacy', 'financial-literacy',
+     'Understanding savings, budgeting, and credit to build long-term economic security for families. Financial literacy is a foundational skill that helps women and families plan for a more stable future.',
+     'img/gallery-4.jpg', 'published', '2026-04-12 09:00:00');
