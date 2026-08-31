@@ -1,0 +1,16 @@
+{
+    "name": "bloombeyondborders/website",
+    "description": "Bloom Beyond Borders website - vanilla PHP MVC",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
