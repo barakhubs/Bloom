@@ -1,5 +1,16 @@
 /********** Template CSS **********/
 :root {
+    /*
+     * Bloom Beyond Borders brand colors. bootstrap.min.css's own :root already
+     * declares --bs-primary/--bs-secondary (and this template's own rules below,
+     * e.g. .section-title, .testimonial-img, use var(--bs-primary)/var(--bs-secondary)
+     * directly) - both were recolored in bootstrap.min.css by tools/recolor-bootstrap.php,
+     * since that compiled build's own component rules (.btn-primary etc) use literal
+     * baked-in hex/rgb values, not var(). Redeclared here too as the canonical
+     * reference for any new CSS written in this project going forward.
+     */
+    --bs-primary: #7ec11c;
+    --bs-secondary: #003893;
     --bs-tertiary: #797E88;
 }
 
