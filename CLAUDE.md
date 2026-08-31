@@ -132,7 +132,7 @@ One feature branch per row, in order — each builds on the ones above it and sh
 | 2 | `feature/database-schema` | `database/schema.sql` (all 10 tables), `database/seed.sql` (admin user, placeholder Our Story content, default settings row) | Import cleanly into a fresh MySQL DB, no FK errors |
 | 3 | `feature/brand-theme` | `:root` color overrides in `css/style.css` (`#7EC11C` / `#003893`), favicon/logo placeholder swap | Visually diff key pages against old template colors |
 | 4 | `feature/public-layout` | Shared header/nav/footer view partials wired to the real site map, restyled 404 | Nav links resolve to correct (even if stubbed) routes on every page |
-| 5 | `feature/home-page` | Home controller + view: hero, mission, programs, donate-CTA, team teaser, testimonials, partners teaser | Manual browse of `/` |
+| 5 | `feature/home-page` | Home controller + view: hero, mission, programs, donate-CTA, team teaser (DB), gallery teaser (DB), partners teaser (DB, hidden when empty) | Manual browse of `/` |
 | 6 | `feature/our-story-page` | Founder bio/mission static content + DB-backed stats/finance/board-letter blocks (reads `story_content_blocks`) | Content renders from seeded DB data |
 | 7 | `feature/our-services-page` | Services controller/view (Education, ECE, Immigrant Family Support, upcoming initiatives) | Manual browse of `/our-services` |
 | 8 | `feature/team-partners-public` | Team + Partners pages, DB-backed read-only display | Manual browse of `/our-team`, `/partners` |

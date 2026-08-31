@@ -89,3 +89,19 @@ INSERT INTO story_finance_entries (year, category, percentage, sort_order) VALUE
 INSERT INTO story_board_letter (id, author_name, author_title, body) VALUES
     (1, 'Elliot Smith', 'Board Member',
      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. This placeholder letter mirrors what is currently live on bloombeyondborders.org and should be replaced with a real board letter via the admin back office.');
+
+-- --------------------------------------------------
+-- gallery_albums / gallery_images — placeholder photos using the template's own
+-- stock images, named after the live site's actual "Our Year in Pictures" gallery
+-- heading. Replace via the admin back office once real event/program photos exist.
+-- --------------------------------------------------
+INSERT INTO gallery_albums (id, name, slug, sort_order) VALUES
+    (1, 'Our Year in Pictures', 'our-year-in-pictures', 1);
+
+INSERT INTO gallery_images (album_id, image_path, caption, sort_order) VALUES
+    (1, 'img/gallery-1.jpg', NULL, 1),
+    (1, 'img/gallery-2.jpg', NULL, 2),
+    (1, 'img/gallery-3.jpg', NULL, 3),
+    (1, 'img/gallery-4.jpg', NULL, 4),
+    (1, 'img/gallery-5.jpg', NULL, 5),
+    (1, 'img/gallery-6.jpg', NULL, 6);
