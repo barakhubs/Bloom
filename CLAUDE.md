@@ -16,7 +16,7 @@ This project rebuilds it as a **vanilla PHP MVC** backend + **vanilla HTML/CSS/J
 ## Tech stack
 
 - **Backend:** PHP, hand-rolled MVC (no framework). Dev server: `php -S localhost:8000 -t public`.
-- **Database:** MySQL, accessed via PDO with prepared statements only (no raw string-interpolated SQL, anywhere).
+- **Database:** MySQL/MariaDB (local dev via XAMPP — database `bloom`, user `root`, empty password, matching the defaults in `app/Config/db.php`), accessed via PDO with prepared statements only (no raw string-interpolated SQL, anywhere).
 - **Dependencies:** Composer, scoped to **PHPMailer only** (SMTP sending for contact-form notifications and comment-moderation emails). No other Composer or npm packages.
 - **Frontend:** the template's existing stack stays as-is for visuals — Bootstrap 5 (compiled CSS, no Sass toolchain available), jQuery + wow.js/waypoints/owl-carousel/counterup vendor libs (`lib/`). Any *new* interactive code (admin panel forms, honeypot handling, comment forms, image upload previews) is written in plain vanilla JS — no new jQuery usage, no new frontend libraries.
 - **Auth:** session-based admin auth, `password_hash()`/`password_verify()`, CSRF tokens on all state-changing admin forms.
@@ -92,16 +92,18 @@ Routing is a small hand-written `Router` (method + path → controller action), 
 
 ## Database schema outline
 
+Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both verified by direct import into the local XAMPP `bloom` database (MariaDB 10.4.32).
+
 - `admin_users` (id, email, password_hash, created_at)
-- `settings` (key varchar primary key, value text) — social links, SMTP config, logo/favicon/footer-logo paths
+- `settings` (key varchar primary key, value text) — social links, contact phone/email/address, SMTP config, logo/favicon/footer-logo paths
 - `team_members` (id, name, title, bio, photo_path, sort_order)
 - `partners` (id, name, logo_path, link_url, sort_order)
 - `gallery_albums` (id, name, slug, sort_order)
-- `gallery_images` (id, album_id FK, image_path, caption, sort_order)
+- `gallery_images` (id, album_id FK → gallery_albums, ON DELETE CASCADE, image_path, caption, sort_order)
 - `blog_posts` (id, title, slug, body, featured_image_path, status[draft/published], published_at)
-- `blog_comments` (id, post_id FK, author_name, author_email, body, status[pending/approved], created_at, honeypot flag not persisted — rejected silently)
+- `blog_comments` (id, post_id FK → blog_posts, ON DELETE CASCADE, author_name, author_email, body, status[pending/approved], created_at — honeypot flag not persisted, rejected silently before insert)
 - `contact_submissions` (id, name, email, subject, message, created_at)
-- `story_content_blocks` (id, type[stat/finance/board_letter], label, value, sort_order) or split into three narrower tables if that reads cleaner during implementation
+- Our Story content, split into three focused tables (settled from the "or split" option): `story_stats` (id, label, value, sort_order), `story_finance_entries` (id, year, category, percentage, sort_order), `story_board_letter` (id fixed to 1 via CHECK constraint, author_name, author_title, body, updated_at)
 
 ## Forms & spam handling
 
