@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Models\GalleryAlbum;
 
 class GalleryController extends Controller
 {
@@ -11,6 +12,7 @@ class GalleryController extends Controller
         $this->view('gallery/index', [
             'title' => 'Gallery - Bloom Beyond Borders',
             'pageTitle' => 'Gallery',
+            'albums' => (new GalleryAlbum())->allWithImages(),
         ]);
     }
 }
