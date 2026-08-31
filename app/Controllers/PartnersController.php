@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Models\Partner;
 
 class PartnersController extends Controller
 {
@@ -11,6 +12,7 @@ class PartnersController extends Controller
         $this->view('partners/index', [
             'title' => 'Partners - Bloom Beyond Borders',
             'pageTitle' => 'Partners',
+            'partners' => (new Partner())->all(),
         ]);
     }
 }
