@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+session_start();
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use App\Controllers\BlogController;
@@ -25,5 +27,6 @@ $router->get('/gallery', [GalleryController::class, 'index']);
 $router->get('/blog', [BlogController::class, 'index']);
 $router->get('/blog/{slug}', [BlogController::class, 'show']);
 $router->get('/contact', [ContactController::class, 'index']);
+$router->post('/contact', [ContactController::class, 'submit']);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
