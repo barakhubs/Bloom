@@ -10,8 +10,8 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6">
                     <div class="carousel-text">
-                        <h1 class="display-1 text-uppercase mb-3">Knowledge, Care, and Courage</h1>
-                        <p class="fs-5 mb-5">Empowering vulnerable children and women in Uganda through education, healthcare, and economic opportunity.</p>
+                        <h1 class="display-1 text-uppercase mb-3">Transforming Lives with Knowledge, Care, and Courage</h1>
+                        <p class="fs-5 mb-5">Supporting children and women in need across Uganda and African immigrant families across the USA.</p>
                         <div class="d-flex">
                             <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
                             <a class="btn btn-secondary py-3 px-4" href="/our-story">Our Story</a>
@@ -29,8 +29,8 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6">
                     <div class="carousel-text">
-                        <h1 class="display-1 text-uppercase mb-3">Building Bridges for Families</h1>
-                        <p class="fs-5 mb-5">Culturally responsive guidance and integration resources that help African immigrant families thrive in the US.</p>
+                        <h1 class="display-1 text-uppercase mb-3">Our Vision</h1>
+                        <p class="fs-5 mb-5">To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet.</p>
                         <div class="d-flex mt-4">
                             <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
                             <a class="btn btn-secondary py-3 px-4" href="/our-services">Our Services</a>
@@ -61,7 +61,7 @@
             <div class="col-lg-6">
                 <p class="section-title bg-white text-start text-primary pe-3">About Us</p>
                 <h1 class="display-6 mb-4 wow fadeIn" data-wow-delay="0.2s">Transforming Lives with Knowledge, Care, and Courage</h1>
-                <p class="mb-4 wow fadeIn" data-wow-delay="0.3s">Bloom Beyond Borders empowers vulnerable children and women in Uganda through education, healthcare, and economic opportunity, while supporting African immigrant families in the US with culturally responsive guidance and integration resources. We work to break cycles of poverty and build resilient communities through comprehensive, data-driven programs.</p>
+                <p class="mb-4 wow fadeIn" data-wow-delay="0.3s">"To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet." Bloom Beyond Borders empowers vulnerable children and women in Uganda through education, healthcare, economic opportunity, and emotional support, while assisting African immigrant families in the US with culturally responsive guidance.</p>
                 <div class="row g-4 pt-2">
                     <div class="col-sm-6 wow fadeIn" data-wow-delay="0.4s">
                         <div class="h-100">
@@ -73,7 +73,7 @@
                     </div>
                     <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
                         <div class="h-100 bg-primary p-4 text-center">
-                            <p class="fs-5 text-dark">Through your support, we help break cycles of poverty and build resilient communities.</p>
+                            <p class="fs-5 text-dark">"Every child deserves access to opportunity and every woman deserves the chance to thrive."</p>
                             <a class="btn btn-secondary py-2 px-4" href="/contact">Donate Now</a>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Education</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Education Support</a>
-                    <p>Scholarships, vocational training, and community learning centers that break down barriers to education for children and women in Uganda.</p>
+                    <p>Our Education Support program provides resources and scholarships for children in need, ensuring they have access to quality education.</p>
                     <a href="/our-services" class="btn btn-primary w-100 py-3">Learn More</a>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Empowerment</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Women Empowerment Workshops</a>
-                    <p>Skills training and entrepreneurship guidance that help women build sustainable income and lasting independence.</p>
+                    <p>We conduct workshops aimed at empowering women through skills training and entrepreneurship.</p>
                     <a href="/our-services" class="btn btn-primary w-100 py-3">Learn More</a>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Family Support</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Immigrant Family Assistance</a>
-                    <p>Culturally responsive guidance, school partnership, and integration resources for African immigrant families in the US.</p>
+                    <p>Our Immigrant Family Assistance program offers support services, including housing, legal aid, and integration resources.</p>
                     <a href="/our-services" class="btn btn-primary w-100 py-3">Learn More</a>
                 </div>
             </div>

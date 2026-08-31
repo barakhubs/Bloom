@@ -25,9 +25,11 @@ require dirname(__DIR__) . '/partials/page-header.php';
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-9 text-center">
-                <p class="section-title bg-white text-center text-primary px-3">Our Founder</p>
+                <p class="section-title bg-white text-center text-primary px-3">About the Founder</p>
                 <h1 class="display-6 mb-4">Dr. Agatha Asiimwe</h1>
-                <p class="fs-5">Raised in rural Uganda and shaped by life across Norway, Australia, and the United States, Dr. Agatha Asiimwe founded Bloom Beyond Borders to support children and women in Uganda while empowering African immigrant families in the US. As a mother and researcher, her doctoral work examined African immigrant parent engagement in the Pacific Northwest &mdash; research that, together with her own lived experience, grounds the organization's approach to social justice, cross-cultural understanding, and empowering marginalized communities.</p>
+                <p class="fs-5">Raised in rural Uganda and shaped by life across Norway, Australia, and the United States, our founder knows both the challenges of limited resources and the struggles immigrants face in new environments.</p>
+                <p class="fs-5">Dr. Asiimwe founded Bloom Beyond Borders, a mission-driven organization inspired by a lifetime of cross-cultural experiences and a deep commitment to empowering underserved communities. Born and raised in rural Uganda, she witnessed firsthand the daily challenges faced by children and women striving for opportunity.</p>
+                <p class="fs-5">As a mother of three, Dr. Asiimwe learned to advocate within school systems and support her children as they bridged multiple cultures. Her mission is to support children and women in rural Uganda while empowering African immigrant families in the United States.</p>
             </div>
         </div>
     </div>
