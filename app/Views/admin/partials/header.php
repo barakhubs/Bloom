@@ -17,6 +17,7 @@ $adminNavLinks = [
     '/admin/settings' => 'Settings',
     '/admin/team' => 'Team',
     '/admin/partners' => 'Partners',
+    '/admin/gallery' => 'Gallery',
 ];
 ?>
 <!DOCTYPE html>
@@ -59,7 +60,8 @@ $adminNavLinks = [
         <nav class="admin-sidebar bg-secondary flex-shrink-0 py-3">
             <div class="nav flex-column">
                 <?php foreach ($adminNavLinks as $href => $label): ?>
-                    <a href="<?= htmlspecialchars($href) ?>" class="nav-link px-4 py-2<?= $adminNavPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
+                    <?php $isActive = $href === '/admin' ? $adminNavPath === '/admin' : str_starts_with($adminNavPath, $href); ?>
+                    <a href="<?= htmlspecialchars($href) ?>" class="nav-link px-4 py-2<?= $isActive ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                 <?php endforeach; ?>
             </div>
         </nav>

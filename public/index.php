@@ -8,6 +8,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 use App\Controllers\Admin\AuthController as AdminAuthController;
 use App\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Controllers\Admin\PartnersController as AdminPartnersController;
 use App\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Controllers\Admin\TeamController as AdminTeamController;
@@ -55,5 +56,17 @@ $router->post('/admin/partners', [AdminPartnersController::class, 'store']);
 $router->get('/admin/partners/{id}/edit', [AdminPartnersController::class, 'edit']);
 $router->post('/admin/partners/{id}', [AdminPartnersController::class, 'update']);
 $router->post('/admin/partners/{id}/delete', [AdminPartnersController::class, 'destroy']);
+
+$router->get('/admin/gallery', [AdminGalleryController::class, 'index']);
+$router->get('/admin/gallery/create', [AdminGalleryController::class, 'createAlbum']);
+$router->post('/admin/gallery', [AdminGalleryController::class, 'storeAlbum']);
+$router->get('/admin/gallery/{id}/edit', [AdminGalleryController::class, 'editAlbum']);
+$router->post('/admin/gallery/{id}', [AdminGalleryController::class, 'updateAlbum']);
+$router->post('/admin/gallery/{id}/delete', [AdminGalleryController::class, 'destroyAlbum']);
+$router->get('/admin/gallery/{id}', [AdminGalleryController::class, 'showAlbum']);
+$router->post('/admin/gallery/{albumId}/images', [AdminGalleryController::class, 'storeImage']);
+$router->get('/admin/gallery/{albumId}/images/{imageId}/edit', [AdminGalleryController::class, 'editImage']);
+$router->post('/admin/gallery/{albumId}/images/{imageId}', [AdminGalleryController::class, 'updateImage']);
+$router->post('/admin/gallery/{albumId}/images/{imageId}/delete', [AdminGalleryController::class, 'destroyImage']);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
