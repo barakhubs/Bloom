@@ -116,16 +116,18 @@ $navLinks = [
         <div class="nav-bar">
             <nav class="navbar navbar-expand-lg bg-primary navbar-dark px-4 py-lg-0">
                 <h4 class="d-lg-none m-0">Menu</h4>
-                <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <button type="button" class="navbar-toggler me-0" data-bs-toggle="offcanvas" data-bs-target="#mobileNavOffcanvas" aria-controls="mobileNavOffcanvas" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                <!-- Desktop nav (lg and up); mobile uses the offcanvas panel below instead -->
+                <div class="d-none d-lg-flex align-items-center flex-grow-1">
                     <div class="navbar-nav me-auto">
                         <?php foreach ($navLinks as $href => $label): ?>
                             <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                         <?php endforeach; ?>
                     </div>
-                    <div class="d-none d-lg-flex ms-auto">
+                    <div class="d-flex ms-auto">
                         <?php if (!empty($settings['social_linkedin'])): ?>
                             <a class="btn btn-square btn-dark ms-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
                         <?php endif; ?>
@@ -138,3 +140,27 @@ $navLinks = [
         </div>
     </div>
     <!-- Navbar End -->
+
+    <!-- Mobile Off-canvas Nav Start -->
+    <div class="offcanvas offcanvas-start bg-secondary d-lg-none" tabindex="-1" id="mobileNavOffcanvas" aria-labelledby="mobileNavOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title text-primary text-uppercase fw-bold" id="mobileNavOffcanvasLabel">Menu</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div class="navbar-nav">
+                <?php foreach ($navLinks as $href => $label): ?>
+                    <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
+                <?php endforeach; ?>
+            </div>
+            <div class="d-flex mt-auto pt-4">
+                <?php if (!empty($settings['social_linkedin'])): ?>
+                    <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+                <?php endif; ?>
+                <?php if (!empty($settings['social_instagram'])): ?>
+                    <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Off-canvas Nav End -->
