@@ -6,6 +6,7 @@ use App\Controllers\ErrorController;
 use App\Core\AdminController;
 use App\Core\Csrf;
 use App\Core\Database;
+use App\Core\Slug;
 use App\Core\Upload;
 use App\Models\GalleryAlbum;
 use App\Models\GalleryImage;
@@ -235,7 +236,7 @@ class GalleryController extends AdminController
         }
 
         $model = new GalleryAlbum();
-        $slug = $this->uniqueSlug($this->slugify($name), $id);
+        $slug = $this->uniqueSlug(Slug::make($name), $id);
 
         if ($id === null) {
             $model->create($name, $slug, $sortOrder);
@@ -245,15 +246,6 @@ class GalleryController extends AdminController
 
         header('Location: /admin/gallery');
         exit;
-    }
-
-    private function slugify(string $name): string
-    {
-        $slug = strtolower(trim($name));
-        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug) ?? '';
-        $slug = trim($slug, '-');
-
-        return $slug !== '' ? $slug : 'album';
     }
 
     /**

@@ -8,6 +8,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 use App\Controllers\Admin\AuthController as AdminAuthController;
 use App\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Controllers\Admin\BlogController as AdminBlogController;
 use App\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Controllers\Admin\PartnersController as AdminPartnersController;
 use App\Controllers\Admin\SettingsController as AdminSettingsController;
@@ -68,5 +69,16 @@ $router->post('/admin/gallery/{albumId}/images', [AdminGalleryController::class,
 $router->get('/admin/gallery/{albumId}/images/{imageId}/edit', [AdminGalleryController::class, 'editImage']);
 $router->post('/admin/gallery/{albumId}/images/{imageId}', [AdminGalleryController::class, 'updateImage']);
 $router->post('/admin/gallery/{albumId}/images/{imageId}/delete', [AdminGalleryController::class, 'destroyImage']);
+
+$router->get('/admin/blog', [AdminBlogController::class, 'index']);
+$router->get('/admin/blog/create', [AdminBlogController::class, 'create']);
+$router->post('/admin/blog', [AdminBlogController::class, 'store']);
+$router->get('/admin/blog/{id}/edit', [AdminBlogController::class, 'edit']);
+$router->post('/admin/blog/{id}', [AdminBlogController::class, 'update']);
+$router->post('/admin/blog/{id}/delete', [AdminBlogController::class, 'destroy']);
+
+$router->get('/admin/comments', [AdminBlogController::class, 'commentsIndex']);
+$router->post('/admin/comments/{id}/approve', [AdminBlogController::class, 'approveComment']);
+$router->post('/admin/comments/{id}/delete', [AdminBlogController::class, 'deleteComment']);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

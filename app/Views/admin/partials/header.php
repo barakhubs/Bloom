@@ -18,6 +18,8 @@ $adminNavLinks = [
     '/admin/team' => 'Team',
     '/admin/partners' => 'Partners',
     '/admin/gallery' => 'Gallery',
+    '/admin/blog' => 'Blog',
+    '/admin/comments' => 'Comments',
 ];
 ?>
 <!DOCTYPE html>

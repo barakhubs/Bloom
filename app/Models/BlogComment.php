@@ -23,4 +23,30 @@ class BlogComment extends Model
         );
         $stmt->execute([$postId, $authorName, $authorEmail, $website, $body]);
     }
+
+    /**
+     * Every comment across every post, joined with the post title/slug, for the
+     * admin moderation queue - pending ones first, then newest first.
+     */
+    public function allWithPostTitles(): array
+    {
+        return $this->db->query(
+            "SELECT c.*, p.title AS post_title, p.slug AS post_slug
+             FROM blog_comments c
+             JOIN blog_posts p ON p.id = c.post_id
+             ORDER BY (c.status = 'pending') DESC, c.created_at DESC"
+        )->fetchAll();
+    }
+
+    public function approve(int $id): void
+    {
+        $stmt = $this->db->prepare("UPDATE blog_comments SET status = 'approved' WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+    public function delete(int $id): void
+    {
+        $stmt = $this->db->prepare('DELETE FROM blog_comments WHERE id = ?');
+        $stmt->execute([$id]);
+    }
 }
