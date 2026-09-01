@@ -2,6 +2,29 @@
 
 declare(strict_types=1);
 
+$appConfig = require dirname(__DIR__) . '/app/Config/app.php';
+
+error_reporting(E_ALL);
+if ($appConfig['debug']) {
+    ini_set('display_errors', '1');
+} else {
+    // Never leak stack traces, file paths, or raw DB errors to visitors - log
+    // the real error server-side and show a generic message instead.
+    ini_set('display_errors', '0');
+    set_exception_handler(function (\Throwable $e): void {
+        error_log($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+        http_response_code(500);
+        echo 'Something went wrong. Please try again later.';
+    });
+}
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'httponly' => true,
+    'samesite' => 'Lax',
+    'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+]);
 session_start();
 
 require dirname(__DIR__) . '/vendor/autoload.php';

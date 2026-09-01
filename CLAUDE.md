@@ -113,10 +113,14 @@ Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both ve
 
 ## Security notes
 
+Verified in `polish/security-hardening-docs` via a systematic audit (not just written intent) — see that branch's commit for the specifics of what was checked.
+
 - `password_hash()` / `password_verify()` for the single admin account; no plaintext passwords anywhere.
-- PDO prepared statements for every query — no string-concatenated SQL.
-- CSRF token (session-bound, checked on POST) on every admin form.
-- File uploads (team photos, partner logos, gallery images, site logo/favicon/footer logo, blog featured images): validate MIME type and extension against an allowlist (jpg/png/webp/svg-for-logos, ico for favicon), enforce a max size, store outside of directly-executable paths where feasible, rename on save (don't trust the original filename).
+- PDO prepared statements for every query — no string-concatenated SQL anywhere in the codebase (confirmed: zero raw `->exec()` calls, zero variable-interpolated SQL strings).
+- CSRF token (session-bound, checked on POST) on every state-changing form, public and admin alike — confirmed all 30 registered POST routes trace back to a `Csrf::verify()` check, and every check fails closed (blocks + redirects on mismatch, never silently continues).
+- File uploads (team photos, partner logos, gallery images, site logo/favicon/footer logo, blog featured images) all go through one `App\Core\Upload::store()` helper: extension allowlist, actual file content checked against the claimed extension via `finfo` for raster formats, a max size cap, and a randomly-generated filename on save (the original filename is never trusted or reused). SVG uploads (logos only) are additionally scanned for `<script>` tags, `on*=` event-handler attributes, and `javascript:` URIs before being accepted — verified against both a clean and a deliberately malicious SVG through the real upload pipeline.
+- Session cookie hardened: `HttpOnly` always, `SameSite=Lax`, `Secure` auto-enabled when served over HTTPS.
+- `debug` config now derives from `APP_ENV` (off in production unless explicitly overridden via `APP_DEBUG`) instead of being hardcoded on; when off, uncaught exceptions show a generic message and log the real error server-side rather than leaking stack traces/file paths — verified directly (a test exception with a fake "sensitive" string appeared in the log but not in the HTTP response).
 
 ## License note
 
