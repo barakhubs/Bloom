@@ -33,7 +33,7 @@ $navLinks = [
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-    <link href="/img/favicon.ico" rel="icon">
+    <link href="/<?= htmlspecialchars(ltrim($settings['favicon_path'] ?: 'img/favicon.ico', '/')) ?>" rel="icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,7 +62,11 @@ $navLinks = [
         <div class="row align-items-center h-100">
             <div class="col-lg-4 text-center text-lg-start">
                 <a href="/">
-                    <h1 class="site-title text-uppercase fw-bold text-primary m-0">Bloom Beyond Borders</h1>
+                    <?php if (!empty($settings['site_logo_path'])): ?>
+                        <img src="/<?= htmlspecialchars(ltrim($settings['site_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" style="max-height: 70px;">
+                    <?php else: ?>
+                        <h1 class="site-title text-uppercase fw-bold text-primary m-0">Bloom Beyond Borders</h1>
+                    <?php endif; ?>
                 </a>
             </div>
             <div class="col-lg-8 d-none d-lg-block">

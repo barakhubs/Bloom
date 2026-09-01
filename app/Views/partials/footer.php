@@ -7,7 +7,11 @@
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-4 col-md-6">
-                    <h4 class="text-white mb-4">Bloom Beyond Borders</h4>
+                    <?php if (!empty($settings['footer_logo_path'])): ?>
+                        <img src="/<?= htmlspecialchars(ltrim($settings['footer_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" class="mb-4" style="max-height: 60px;">
+                    <?php else: ?>
+                        <h4 class="text-white mb-4">Bloom Beyond Borders</h4>
+                    <?php endif; ?>
                     <p>Transforming lives with knowledge, care, and courage &mdash; empowering vulnerable children and women in Uganda, and supporting African immigrant families in the US.</p>
                     <div class="d-flex mt-3">
                         <?php if (!empty($settings['social_linkedin'])): ?>

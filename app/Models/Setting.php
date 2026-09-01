@@ -31,4 +31,12 @@ class Setting
 
         return $value !== false && $value !== null ? $value : $default;
     }
+
+    public static function set(string $key, string $value): void
+    {
+        $stmt = Database::connection()->prepare(
+            'INSERT INTO settings (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)'
+        );
+        $stmt->execute([$key, $value]);
+    }
 }
