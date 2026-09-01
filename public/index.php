@@ -6,6 +6,8 @@ session_start();
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+use App\Controllers\Admin\AuthController as AdminAuthController;
+use App\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Controllers\BlogController;
 use App\Controllers\ContactController;
 use App\Controllers\GalleryController;
@@ -29,5 +31,10 @@ $router->get('/blog/{slug}', [BlogController::class, 'show']);
 $router->post('/blog/{slug}/comments', [BlogController::class, 'submitComment']);
 $router->get('/contact', [ContactController::class, 'index']);
 $router->post('/contact', [ContactController::class, 'submit']);
+
+$router->get('/admin/login', [AdminAuthController::class, 'showLogin']);
+$router->post('/admin/login', [AdminAuthController::class, 'login']);
+$router->post('/admin/logout', [AdminAuthController::class, 'logout']);
+$router->get('/admin', [AdminDashboardController::class, 'index']);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
