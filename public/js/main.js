@@ -58,6 +58,17 @@
     });
 
 
+    // Gallery Lightbox
+    $(document).ready(function () {
+        $('.gallery-thumb').click(function () {
+            var fullSrc = $(this).data('full');
+            var caption = $(this).data('caption') || '';
+            $('#galleryLightboxImage').attr('src', fullSrc);
+            $('#galleryLightboxCaption').text(caption);
+        });
+    });
+
+
     // Facts counter
     $('[data-toggle="counter-up"]').counterUp({
         delay: 10,

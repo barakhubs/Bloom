@@ -16,7 +16,7 @@ This project rebuilds it as a **vanilla PHP MVC** backend + **vanilla HTML/CSS/J
 ## Tech stack
 
 - **Backend:** PHP, hand-rolled MVC (no framework). Dev server: `php -S localhost:8000 -t public`.
-- **Database:** MySQL, accessed via PDO with prepared statements only (no raw string-interpolated SQL, anywhere).
+- **Database:** MySQL/MariaDB (local dev via XAMPP — database `bloom`, user `root`, empty password, matching the defaults in `app/Config/db.php`), accessed via PDO with prepared statements only (no raw string-interpolated SQL, anywhere).
 - **Dependencies:** Composer, scoped to **PHPMailer only** (SMTP sending for contact-form notifications and comment-moderation emails). No other Composer or npm packages.
 - **Frontend:** the template's existing stack stays as-is for visuals — Bootstrap 5 (compiled CSS, no Sass toolchain available), jQuery + wow.js/waypoints/owl-carousel/counterup vendor libs (`lib/`). Any *new* interactive code (admin panel forms, honeypot handling, comment forms, image upload previews) is written in plain vanilla JS — no new jQuery usage, no new frontend libraries.
 - **Auth:** session-based admin auth, `password_hash()`/`password_verify()`, CSRF tokens on all state-changing admin forms.
@@ -92,16 +92,18 @@ Routing is a small hand-written `Router` (method + path → controller action), 
 
 ## Database schema outline
 
+Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both verified by direct import into the local XAMPP `bloom` database (MariaDB 10.4.32).
+
 - `admin_users` (id, email, password_hash, created_at)
-- `settings` (key varchar primary key, value text) — social links, SMTP config, logo/favicon/footer-logo paths
+- `settings` (key varchar primary key, value text) — social links, contact phone/email/address, SMTP config, logo/favicon/footer-logo paths
 - `team_members` (id, name, title, bio, photo_path, sort_order)
 - `partners` (id, name, logo_path, link_url, sort_order)
 - `gallery_albums` (id, name, slug, sort_order)
-- `gallery_images` (id, album_id FK, image_path, caption, sort_order)
+- `gallery_images` (id, album_id FK → gallery_albums, ON DELETE CASCADE, image_path, caption, sort_order)
 - `blog_posts` (id, title, slug, body, featured_image_path, status[draft/published], published_at)
-- `blog_comments` (id, post_id FK, author_name, author_email, body, status[pending/approved], created_at, honeypot flag not persisted — rejected silently)
+- `blog_comments` (id, post_id FK → blog_posts, ON DELETE CASCADE, author_name, author_email, body, status[pending/approved], created_at — honeypot flag not persisted, rejected silently before insert)
 - `contact_submissions` (id, name, email, subject, message, created_at)
-- `story_content_blocks` (id, type[stat/finance/board_letter], label, value, sort_order) or split into three narrower tables if that reads cleaner during implementation
+- Our Story content, split into three focused tables (settled from the "or split" option): `story_stats` (id, label, value, sort_order), `story_finance_entries` (id, year, category, percentage, sort_order), `story_board_letter` (id fixed to 1 via CHECK constraint, author_name, author_title, body, updated_at)
 
 ## Forms & spam handling
 
@@ -111,10 +113,14 @@ Routing is a small hand-written `Router` (method + path → controller action), 
 
 ## Security notes
 
+Verified in `polish/security-hardening-docs` via a systematic audit (not just written intent) — see that branch's commit for the specifics of what was checked.
+
 - `password_hash()` / `password_verify()` for the single admin account; no plaintext passwords anywhere.
-- PDO prepared statements for every query — no string-concatenated SQL.
-- CSRF token (session-bound, checked on POST) on every admin form.
-- File uploads (team photos, partner logos, gallery images, site logo/favicon/footer logo, blog featured images): validate MIME type and extension against an allowlist (jpg/png/webp/svg-for-logos, ico for favicon), enforce a max size, store outside of directly-executable paths where feasible, rename on save (don't trust the original filename).
+- PDO prepared statements for every query — no string-concatenated SQL anywhere in the codebase (confirmed: zero raw `->exec()` calls, zero variable-interpolated SQL strings).
+- CSRF token (session-bound, checked on POST) on every state-changing form, public and admin alike — confirmed all 30 registered POST routes trace back to a `Csrf::verify()` check, and every check fails closed (blocks + redirects on mismatch, never silently continues).
+- File uploads (team photos, partner logos, gallery images, site logo/favicon/footer logo, blog featured images) all go through one `App\Core\Upload::store()` helper: extension allowlist, actual file content checked against the claimed extension via `finfo` for raster formats, a max size cap, and a randomly-generated filename on save (the original filename is never trusted or reused). SVG uploads (logos only) are additionally scanned for `<script>` tags, `on*=` event-handler attributes, and `javascript:` URIs before being accepted — verified against both a clean and a deliberately malicious SVG through the real upload pipeline.
+- Session cookie hardened: `HttpOnly` always, `SameSite=Lax`, `Secure` auto-enabled when served over HTTPS.
+- `debug` config now derives from `APP_ENV` (off in production unless explicitly overridden via `APP_DEBUG`) instead of being hardcoded on; when off, uncaught exceptions show a generic message and log the real error server-side rather than leaking stack traces/file paths — verified directly (a test exception with a fake "sensitive" string appeared in the log but not in the HTTP response).
 
 ## License note
 
@@ -130,7 +136,7 @@ One feature branch per row, in order — each builds on the ones above it and sh
 | 2 | `feature/database-schema` | `database/schema.sql` (all 10 tables), `database/seed.sql` (admin user, placeholder Our Story content, default settings row) | Import cleanly into a fresh MySQL DB, no FK errors |
 | 3 | `feature/brand-theme` | `:root` color overrides in `css/style.css` (`#7EC11C` / `#003893`), favicon/logo placeholder swap | Visually diff key pages against old template colors |
 | 4 | `feature/public-layout` | Shared header/nav/footer view partials wired to the real site map, restyled 404 | Nav links resolve to correct (even if stubbed) routes on every page |
-| 5 | `feature/home-page` | Home controller + view: hero, mission, programs, donate-CTA, team teaser, testimonials, partners teaser | Manual browse of `/` |
+| 5 | `feature/home-page` | Home controller + view: hero, mission, programs, donate-CTA, team teaser (DB), gallery teaser (DB), partners teaser (DB, hidden when empty) | Manual browse of `/` |
 | 6 | `feature/our-story-page` | Founder bio/mission static content + DB-backed stats/finance/board-letter blocks (reads `story_content_blocks`) | Content renders from seeded DB data |
 | 7 | `feature/our-services-page` | Services controller/view (Education, ECE, Immigrant Family Support, upcoming initiatives) | Manual browse of `/our-services` |
 | 8 | `feature/team-partners-public` | Team + Partners pages, DB-backed read-only display | Manual browse of `/our-team`, `/partners` |

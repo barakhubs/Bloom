@@ -1,6 +1,7 @@
 /.claude/
 /vendor/
 /.env
+/public/uploads/
 *.log
 Thumbs.db
 .DS_Store
