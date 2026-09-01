@@ -55,4 +55,17 @@ class Upload
 
         return 'uploads/' . $subfolder . '/' . $filename;
     }
+
+    /**
+     * Removes a previously-stored upload (e.g. when replaced by a new one, or
+     * when the owning record is deleted). Silently no-ops if the file doesn't
+     * exist - never throws, since a missing file here isn't a real failure.
+     */
+    public static function delete(string $relativePath): void
+    {
+        $full = dirname(__DIR__, 2) . '/public/' . ltrim($relativePath, '/');
+        if (is_file($full)) {
+            @unlink($full);
+        }
+    }
 }
