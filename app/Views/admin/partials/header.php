@@ -9,7 +9,7 @@ use App\Models\Setting;
 $title = $title ?? 'Admin - Bloom Beyond Borders';
 $currentAdmin = Auth::check() ? (new AdminUser())->findById(Auth::id()) : null;
 $logoutCsrfToken = Csrf::token();
-$faviconPath = Setting::get('favicon_path', 'img/favicon.ico');
+$faviconPath = Setting::get('favicon_path', 'img/favicon.png');
 
 $adminNavPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $adminNavLinks = [

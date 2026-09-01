@@ -5,7 +5,7 @@
 
 use App\Models\Setting;
 
-$faviconPath = Setting::get('favicon_path', 'img/favicon.ico');
+$faviconPath = Setting::get('favicon_path', 'img/favicon.png');
 ?>
 <!DOCTYPE html>
 <html lang="en">

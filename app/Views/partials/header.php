@@ -33,7 +33,7 @@ $navLinks = [
     <meta content="" name="keywords">
     <meta content="" name="description">
 
-    <link href="/<?= htmlspecialchars(ltrim($settings['favicon_path'] ?: 'img/favicon.ico', '/')) ?>" rel="icon">
+    <link href="/<?= htmlspecialchars(ltrim($settings['favicon_path'] ?: 'img/favicon.png', '/')) ?>" rel="icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

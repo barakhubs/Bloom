@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="carousel-img">
-                        <img class="w-100" src="/img/carousel-1.jpg" alt="Bloom Beyond Borders">
+                        <img class="w-100" src="/img/vocational-training.jpeg" alt="Bloom Beyond Borders">
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="carousel-img">
-                        <img class="w-100" src="/img/carousel-2.jpg" alt="Bloom Beyond Borders">
+                        <img class="w-100" src="/img/community-harvest.jpeg" alt="Bloom Beyond Borders">
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/about.jpg" alt="Bloom Beyond Borders">
+                    <img class="img-fluid w-100" src="/img/craft2.jpg" alt="Bloom Beyond Borders">
                 </div>
             </div>
             <div class="col-lg-6">
@@ -96,7 +96,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/donation-3.jpg" alt="Education Support">
+                        <img class="img-fluid w-100" src="/img/craft3.jpg" alt="Education Support">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Education</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Education Support</a>
@@ -107,7 +107,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/donation-1.jpg" alt="Women Empowerment Workshops">
+                        <img class="img-fluid w-100" src="/img/craft6.jpg" alt="Women Empowerment Workshops">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Empowerment</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Women Empowerment Workshops</a>
@@ -118,7 +118,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/donation-2.jpg" alt="Immigrant Family Assistance">
+                        <img class="img-fluid w-100" src="/img/crafts.jpg" alt="Immigrant Family Assistance">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Family Support</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Immigrant Family Assistance</a>

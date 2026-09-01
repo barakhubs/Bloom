@@ -17,7 +17,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/carousel-1.jpg" alt="Education Support">
+                    <img class="img-fluid w-100" src="/img/craft3.jpg" alt="Education Support">
                 </div>
             </div>
             <div class="col-lg-6">
@@ -38,7 +38,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 order-lg-2 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/about.jpg" alt="Early Childhood Education">
+                    <img class="img-fluid w-100" src="/img/community-harvest.jpeg" alt="Early Childhood Education">
                 </div>
             </div>
             <div class="col-lg-6 order-lg-1">
@@ -58,7 +58,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/carousel-2.jpg" alt="Support for African Immigrant Families">
+                    <img class="img-fluid w-100" src="/img/craft7.jpg" alt="Support for African Immigrant Families">
                 </div>
             </div>
             <div class="col-lg-6">
@@ -83,7 +83,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/event-1.jpg" alt="Skills Training">
+                        <img class="img-fluid w-100" src="/img/craft3.jpg" alt="Skills Training">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Coming Soon</span>
                     </div>
                     <span class="h3 d-inline-block">Skills Training</span>
@@ -93,7 +93,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/event-2.jpg" alt="Entrepreneurship">
+                        <img class="img-fluid w-100" src="/img/craft6.jpg" alt="Entrepreneurship">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Coming Soon</span>
                     </div>
                     <span class="h3 d-inline-block">Entrepreneurship</span>
@@ -103,7 +103,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/event-3.jpg" alt="Community Networks">
+                        <img class="img-fluid w-100" src="/img/crafts.jpg" alt="Community Networks">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Coming Soon</span>
                     </div>
                     <span class="h3 d-inline-block">Community Networks</span>
