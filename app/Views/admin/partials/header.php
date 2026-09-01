@@ -20,6 +20,8 @@ $adminNavLinks = [
     '/admin/gallery' => 'Gallery',
     '/admin/blog' => 'Blog',
     '/admin/comments' => 'Comments',
+    '/admin/story' => 'Our Story',
+    '/admin/contact' => 'Contact Submissions',
 ];
 ?>
 <!DOCTYPE html>
