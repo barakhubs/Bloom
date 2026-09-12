@@ -10,7 +10,7 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6">
                     <div class="carousel-text">
-                        <h1 class="display-1 text-uppercase mb-3">Transforming Lives with Knowledge, Care, and Courage</h1>
+                        <h1 class="display-5 text-uppercase mb-3">Transforming Lives with Knowledge, Care, and Courage</h1>
                         <p class="fs-5 mb-5">Supporting children and women in need across Uganda and African immigrant families across the USA.</p>
                         <div class="d-flex">
                             <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
@@ -29,7 +29,7 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6">
                     <div class="carousel-text">
-                        <h1 class="display-1 text-uppercase mb-3">Our Vision</h1>
+                        <h1 class="display-5 text-uppercase mb-3">Our Vision</h1>
                         <p class="fs-5 mb-5">To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet.</p>
                         <div class="d-flex mt-4">
                             <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
