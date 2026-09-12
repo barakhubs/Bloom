@@ -174,7 +174,7 @@
 /*** Header Carousel ***/
 .header-carousel {
     position: relative;
-    background: url(../img/bg.jpg) center center no-repeat;
+    background: #fdf8ea ;
     background-size: cover;
 }
 
@@ -203,8 +203,12 @@
 }
 
 .page-header {
-    background: url(../img/bg.jpg) center center no-repeat;
+    background: #fdf8ea ;
     background-size: cover;
+}
+
+.page-header h1 {
+    color: var(--bs-secondary) !important;
 }
 
 .page-header .breadcrumb-item+.breadcrumb-item::before {
@@ -218,7 +222,7 @@
 }
 
 .page-header .breadcrumb-item.active {
-    color: var(--bs-dark);
+    color: var(--bs-dark) !important;
 }
 
 
@@ -385,8 +389,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: url(../img/bg.jpg) center center no-repeat;
-    background-size: cover;
+    background: #fdf8ea;
 }
 
 .service-item {
@@ -443,8 +446,7 @@
 /*** Banner ***/
 .banner .banner-inner {
     position: relative;
-    background: url(../img/bg.jpg) center center no-repeat;
-    background-size: cover;
+    background: #fdf8ea;
 }
 
 .banner .banner-inner::before,
@@ -484,8 +486,7 @@
 /*** Donate ***/
 .donate .donate-text {
     position: relative;
-    background: url(../img/bg.jpg) center center no-repeat;
-    background-size: cover;
+    background: #fdf8ea;
 }
 
 .donate .donate-text::before,
@@ -561,8 +562,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: url(../img/bg.jpg) center center no-repeat;
-    background-size: cover;
+    background: #fdf8ea;
 }
 
 .testimonial-img {
