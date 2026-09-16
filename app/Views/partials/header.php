@@ -58,12 +58,12 @@ $navLinks = [
 
 
     <!-- Topbar Start -->
-    <div class="container-fluid bg-secondary top-bar wow fadeIn" data-wow-delay="0.1s">
+    <div class="container-fluid bg-white top-bar wow fadeIn" data-wow-delay="0.1s">
         <div class="row align-items-center h-100">
             <div class="col-lg-4 text-center text-lg-start">
                 <a href="/">
                     <?php if (!empty($settings['site_logo_path'])): ?>
-                        <img src="/<?= htmlspecialchars(ltrim($settings['site_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" style="max-height: 70px;">
+                        <img src="/<?= htmlspecialchars(ltrim($settings['site_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" class="site-logo">
                     <?php else: ?>
                         <h1 class="site-title text-uppercase fw-bold text-primary m-0">Bloom Beyond Borders</h1>
                     <?php endif; ?>
@@ -78,7 +78,7 @@ $navLinks = [
                             </div>
                             <div class="ms-2">
                                 <h6 class="text-primary mb-0">Call Us</h6>
-                                <span class="text-white"><?= htmlspecialchars($settings['contact_phone'] ?? '') ?></span>
+                                <span class="text-dark"><?= htmlspecialchars($settings['contact_phone'] ?? '') ?></span>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@ $navLinks = [
                             </div>
                             <div class="ms-2">
                                 <h6 class="text-primary mb-0">Mail Us</h6>
-                                <span class="text-white"><?= htmlspecialchars($settings['contact_email'] ?? '') ?></span>
+                                <span class="text-dark"><?= htmlspecialchars($settings['contact_email'] ?? '') ?></span>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@ $navLinks = [
                             </div>
                             <div class="ms-2">
                                 <h6 class="text-primary mb-0">Address</h6>
-                                <span class="text-white"><?= htmlspecialchars($settings['contact_address'] ?? '') ?></span>
+                                <span class="text-dark"><?= htmlspecialchars($settings['contact_address'] ?? '') ?></span>
                             </div>
                         </div>
                     </div>
@@ -122,18 +122,18 @@ $navLinks = [
 
                 <!-- Desktop nav (lg and up); mobile uses the offcanvas panel below instead -->
                 <div class="d-none d-lg-flex align-items-center flex-grow-1">
-                    <div class="navbar-nav me-auto">
+                    <div class="d-flex me-4">
+                        <?php if (!empty($settings['social_linkedin'])): ?>
+                            <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_instagram'])): ?>
+                            <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <?php endif; ?>
+                    </div>
+                    <div class="navbar-nav">
                         <?php foreach ($navLinks as $href => $label): ?>
                             <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                         <?php endforeach; ?>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <?php if (!empty($settings['social_linkedin'])): ?>
-                            <a class="btn btn-square btn-dark ms-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-                        <?php endif; ?>
-                        <?php if (!empty($settings['social_instagram'])): ?>
-                            <a class="btn btn-square btn-dark ms-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                        <?php endif; ?>
                     </div>
                 </div>
             </nav>

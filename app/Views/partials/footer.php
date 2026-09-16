@@ -8,7 +8,7 @@
             <div class="row g-5">
                 <div class="col-lg-4 col-md-6">
                     <?php if (!empty($settings['footer_logo_path'])): ?>
-                        <img src="/<?= htmlspecialchars(ltrim($settings['footer_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" class="mb-4" style="max-height: 60px;">
+                        <img src="/<?= htmlspecialchars(ltrim($settings['footer_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" class="footer-logo mb-4">
                     <?php else: ?>
                         <h4 class="text-white mb-4">Bloom Beyond Borders</h4>
                     <?php endif; ?>
@@ -43,7 +43,7 @@
                         &copy; <?= date('Y') ?> <a class="border-bottom" href="/">Bloom Beyond Borders</a>. All Rights Reserved.
                     </div>
                     <div class="col-md-6 text-center text-md-end">
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com" target="_blank" rel="noopener">HTML Codex</a>
+                        Created by <a class="border-bottom" href="https://kimdigitary.com" target="_blank" rel="noopener">Kim Digitary</a>
                     </div>
                 </div>
             </div>
