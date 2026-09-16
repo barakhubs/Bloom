@@ -85,11 +85,25 @@
 .top-bar {
     min-height: 90px;
     padding: 15px 90px;
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
 }
 
 .top-bar .site-title {
     font-size: 1.75rem;
     line-height: 1.2;
+}
+
+.top-bar .site-logo {
+    height: 90px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+@media (max-width: 991.98px) {
+    .top-bar .site-logo {
+        height: 65px;
+    }
 }
 
 .top-bar h6 {
@@ -174,12 +188,39 @@
 /*** Header Carousel ***/
 .header-carousel {
     position: relative;
-    background: #fdf8ea ;
-    background-size: cover;
 }
 
-.header-carousel .carousel-img {
+.header-carousel .slide-item {
     position: relative;
+    min-height: 600px;
+    background-color: var(--bs-dark);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+}
+
+.header-carousel .slide-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(5, 19, 17, .75) 0%, rgba(5, 19, 17, .45) 55%, rgba(5, 19, 17, .15) 100%);
+}
+
+.header-carousel .slide-item .container {
+    position: relative;
+    z-index: 1;
+}
+
+.header-carousel .carousel-text {
+    max-width: 650px;
+}
+
+@media (max-width: 991.98px) {
+    .header-carousel .slide-item {
+        min-height: 450px;
+    }
 }
 
 .header-carousel .owl-nav {
@@ -623,6 +664,13 @@
     color: var(--bs-tertiary);
     background: linear-gradient(rgba(5, 19, 17, .95), rgba(5, 19, 17, .95)), url(../img/bg-footer.jpg) center center no-repeat;
     background-size: cover;
+}
+
+.footer .footer-logo {
+    height: 70px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
 }
 
 .footer .btn.btn-link {
