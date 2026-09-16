@@ -5,41 +5,27 @@
 ?>
 <!-- Carousel Start -->
 <div class="container-fluid p-0 wow fadeIn" data-wow-delay="0.1s">
-    <div class="owl-carousel header-carousel py-5">
-        <div class="container py-5">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6">
-                    <div class="carousel-text">
-                        <h1 class="display-5 text-uppercase mb-3">Transforming Lives with Knowledge, Care, and Courage</h1>
-                        <p class="fs-5 mb-5">Supporting children and women in need across Uganda and African immigrant families across the USA.</p>
-                        <div class="d-flex">
-                            <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
-                            <a class="btn btn-secondary py-3 px-4" href="/our-story">Our Story</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="carousel-img">
-                        <img class="w-100" src="/img/vocational-training.jpeg" alt="Bloom Beyond Borders">
+    <div class="owl-carousel header-carousel">
+        <div class="slide-item" style="background-image: url('/img/10.jpeg');">
+            <div class="container">
+                <div class="carousel-text">
+                    <h1 class="display-5 text-uppercase text-white mb-3">Transforming Lives with Knowledge, Care, and Courage</h1>
+                    <p class="fs-5 text-white mb-5">Supporting children and women in need across Uganda and African immigrant families across the USA.</p>
+                    <div class="d-flex">
+                        <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
+                        <a class="btn btn-secondary py-3 px-4" href="/our-story">Our Story</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container py-5">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6">
-                    <div class="carousel-text">
-                        <h1 class="display-5 text-uppercase mb-3">Our Vision</h1>
-                        <p class="fs-5 mb-5">To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet.</p>
-                        <div class="d-flex mt-4">
-                            <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
-                            <a class="btn btn-secondary py-3 px-4" href="/our-services">Our Services</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="carousel-img">
-                        <img class="w-100" src="/img/community-harvest.jpeg" alt="Bloom Beyond Borders">
+        <div class="slide-item" style="background-image: url('/img/community-harvest.jpeg');">
+            <div class="container">
+                <div class="carousel-text">
+                    <h1 class="display-5 text-uppercase text-white mb-3">Our Vision</h1>
+                    <p class="fs-5 text-white mb-5">To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet.</p>
+                    <div class="d-flex mt-4">
+                        <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
+                        <a class="btn btn-secondary py-3 px-4" href="/our-services">Our Services</a>
                     </div>
                 </div>
             </div>
@@ -96,7 +82,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/craft3.jpg" alt="Education Support">
+                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/craft3.jpg" alt="Education Support">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Education</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Education Support</a>
@@ -107,7 +93,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/craft6.jpg" alt="Women Empowerment Workshops">
+                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/craft6.jpg" alt="Women Empowerment Workshops">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Empowerment</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Women Empowerment Workshops</a>
@@ -118,7 +104,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" src="/img/crafts.jpg" alt="Immigrant Family Assistance">
+                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/crafts.jpg" alt="Immigrant Family Assistance">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Family Support</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Immigrant Family Assistance</a>
@@ -168,9 +154,9 @@
                 <div class="team-item h-100 p-4 text-center">
                     <div class="team-detail">
                         <?php if (!empty($member['photo_path'])): ?>
-                            <img class="img-fluid mb-4" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
+                            <img class="img-fluid mb-4" style="height:240px;width:100%;object-fit:cover;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
                         <?php else: ?>
-                            <div class="bg-light rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width:120px;height:120px;">
+                            <div class="bg-light mb-4 d-flex align-items-center justify-content-center" style="height:240px;width:100%;">
                                 <i class="fa fa-user fa-3x text-primary"></i>
                             </div>
                         <?php endif; ?>
