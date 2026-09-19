@@ -72,7 +72,7 @@
 
 
 <!-- Programs Start -->
-<div class="container-fluid py-5">
+<div class="container-fluid py-5 bg-light">
     <div class="container">
         <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
             <p class="section-title bg-white text-center text-primary px-3">Programs</p>
