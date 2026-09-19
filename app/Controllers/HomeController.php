@@ -13,6 +13,7 @@ class HomeController extends Controller
     {
         $this->view('home', [
             'title' => 'Bloom Beyond Borders - Transforming Lives with Knowledge, Care, and Courage',
+            'description' => 'Bloom Beyond Borders supports vulnerable children and women in Uganda through education, healthcare, and economic opportunity, and helps African immigrant families in the USA integrate with culturally responsive guidance.',
             'teamMembers' => (new TeamMember())->latest(3),
             'partners' => (new Partner())->all(),
             'galleryImages' => (new GalleryImage())->latest(6),

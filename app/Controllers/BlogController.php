@@ -14,6 +14,7 @@ class BlogController extends Controller
         $this->view('blog/index', [
             'title' => 'Blog - Bloom Beyond Borders',
             'pageTitle' => 'Blog',
+            'description' => 'News and updates from Bloom Beyond Borders on our programs supporting children and women in Uganda and African immigrant families in the USA.',
             'posts' => (new BlogPost())->publishedList(),
         ]);
     }
@@ -36,6 +37,8 @@ class BlogController extends Controller
         $this->view('blog/show', [
             'title' => $post['title'] . ' - Bloom Beyond Borders',
             'pageTitle' => $post['title'],
+            'description' => $this->excerpt((string) $post['body']),
+            'ogImage' => !empty($post['featured_image_path']) ? '/' . ltrim((string) $post['featured_image_path'], '/') : null,
             'post' => $post,
             'comments' => (new BlogComment())->approvedForPost((int) $post['id']),
             'errors' => $errors,
@@ -94,6 +97,20 @@ class BlogController extends Controller
         (new BlogComment())->create((int) $post['id'], $name, $email, $website !== '' ? $website : null, $body);
 
         $this->redirectWithSuccess($slug);
+    }
+
+    private function excerpt(string $body, int $maxLength = 160): string
+    {
+        $plain = trim(preg_replace('/\s+/', ' ', $body));
+
+        if (strlen($plain) <= $maxLength) {
+            return $plain;
+        }
+
+        $truncated = substr($plain, 0, $maxLength);
+        $lastSpace = strrpos($truncated, ' ');
+
+        return ($lastSpace !== false ? substr($truncated, 0, $lastSpace) : $truncated) . '...';
     }
 
     private function redirectWithErrors(string $slug, array $errors, string $name, string $email, string $website, string $body): void
