@@ -154,7 +154,7 @@
                 <div class="team-item h-100 p-4 text-center">
                     <div class="team-detail">
                         <?php if (!empty($member['photo_path'])): ?>
-                            <img class="img-fluid mb-4" style="height:240px;width:100%;object-fit:cover;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
+                            <img class="img-fluid mb-4" style="height:240px;width:100%;object-fit:cover;object-position:top center;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
                         <?php else: ?>
                             <div class="bg-light mb-4 d-flex align-items-center justify-content-center" style="height:240px;width:100%;">
                                 <i class="fa fa-user fa-3x text-primary"></i>
