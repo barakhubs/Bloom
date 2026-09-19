@@ -12,7 +12,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
         <div class="row g-5">
             <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s">
                 <p class="section-title bg-white text-start text-primary pe-3">Contact</p>
-                <h1 class="display-6 mb-4">If You Have Any Query, Please Contact Us</h1>
+                <h2 class="display-6 mb-4">If You Have Any Query, Please Contact Us</h2>
                 <p class="mb-4"><i class="fa fa-phone-alt text-primary me-2"></i><?= htmlspecialchars($settings['contact_phone'] ?? '') ?></p>
                 <p class="mb-4"><i class="fa fa-envelope-open text-primary me-2"></i><?= htmlspecialchars($settings['contact_email'] ?? '') ?></p>
                 <p class="mb-4"><i class="fa fa-map-marker-alt text-primary me-2"></i><?= htmlspecialchars($settings['contact_address'] ?? '') ?></p>
@@ -85,8 +85,8 @@ require dirname(__DIR__) . '/partials/page-header.php';
         <div class="row g-0">
             <div class="col-lg-7 donate-text bg-light py-5 wow fadeIn" data-wow-delay="0.1s">
                 <div class="d-flex flex-column justify-content-center h-100 p-5 wow fadeIn" data-wow-delay="0.3s">
-                    <h1 class="display-6 mb-4">Give Today</h1>
-                    <p class="fs-5 mb-0">Your support funds scholarships, healthcare, and skills training for children and women in Uganda, and integration support for African immigrant families in the US.</p>
+                    <h2 class="display-6 mb-4">Give Today</h2>
+                    <p class="fs-5 mb-0">Your support funds scholarships, healthcare, and skills training for children and women in Uganda, and integration support for African immigrant families in the United States of America.</p>
                 </div>
             </div>
             <div class="col-lg-5 donate-form bg-primary py-5 text-center wow fadeIn" data-wow-delay="0.5s">

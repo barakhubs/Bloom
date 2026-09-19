@@ -6,7 +6,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
 <div class="container-fluid py-5">
     <div class="container text-center">
         <p class="section-title bg-white text-center text-primary px-3">Our Partners</p>
-        <h1 class="display-6 mb-4">Working Together for Lasting Change</h1>
+        <h2 class="display-6 mb-4">Working Together for Lasting Change</h2>
         <p class="fs-5 mb-0 mx-auto" style="max-width: 700px;">Empowering women and children creates a ripple effect &mdash; healthier children, stronger families, more resilient economies, and vibrant communities. Together, we can create a world where every woman and child has the opportunity to thrive.</p>
     </div>
 </div>
@@ -41,7 +41,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
         <div class="row g-0">
             <div class="col-lg-7 donate-text bg-light py-5 wow fadeIn" data-wow-delay="0.1s">
                 <div class="d-flex flex-column justify-content-center h-100 p-5 wow fadeIn" data-wow-delay="0.3s">
-                    <h1 class="display-6 mb-4">Become a Sponsor</h1>
+                    <h2 class="display-6 mb-4">Become a Sponsor</h2>
                     <p class="fs-5 mb-0">Partner with Bloom Beyond Borders to help expand access to education, healthcare, and economic opportunity for the communities we serve.</p>
                 </div>
             </div>
