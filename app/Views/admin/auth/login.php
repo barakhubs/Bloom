@@ -15,7 +15,7 @@ $faviconPath = Setting::get('favicon_path', 'img/favicon.png');
     <title><?= htmlspecialchars($title) ?></title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="/<?= htmlspecialchars(ltrim($faviconPath, '/')) ?>" rel="icon">
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700&family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" rel="stylesheet">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">

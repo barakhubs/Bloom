@@ -14,6 +14,13 @@
     --bs-tertiary: #797E88;
 }
 
+/* Heading font override - bootstrap.min.css compiles "Josefin Sans" directly into its
+   h1-h6 rule with no var(), so it can't be changed via a custom property; overridden
+   here instead per this project's "never hand-edit bootstrap.min.css" convention. */
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+    font-family: "Poppins", sans-serif;
+}
+
 .back-to-top {
     position: fixed;
     display: none;
