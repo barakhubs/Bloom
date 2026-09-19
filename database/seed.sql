@@ -20,10 +20,14 @@ INSERT INTO admin_users (email, password_hash) VALUES
 -- --------------------------------------------------
 INSERT INTO settings (`key`, `value`) VALUES
     ('contact_phone', '+256 791-269-955'),
-    ('contact_email', 'agathaasiimwe@gmail.com'),
+    ('contact_email', 'info@bloombeyondborders.org'),
     ('contact_address', '1234 Divi St. #1000 San Francisco, CA 91351'),
-    ('social_linkedin', ''),   -- TODO: set via /admin/settings
-    ('social_instagram', ''),  -- TODO: set via /admin/settings
+    ('social_linkedin', 'https://www.linkedin.com/company/bloom-beyond-borders/'),
+    ('social_instagram', 'https://www.instagram.com/blooombeyondborders/'),
+    ('social_facebook', 'https://www.facebook.com/profile.php?id=61583713474136'),
+    ('social_x', 'https://x.com/BloomBB'),
+    ('whatsapp_us', '+1 360-803-5283'),
+    ('whatsapp_ug', '+256 749 257996'),
     ('site_logo_path', 'img/site-logo.png'),
     ('favicon_path', 'img/favicon.png'),
     ('footer_logo_path', 'img/site-logo.png'),

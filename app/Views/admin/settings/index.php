@@ -46,6 +46,22 @@ $val = fn (string $key) => htmlspecialchars($settings[$key] ?? '');
                 <label class="form-label">Instagram URL</label>
                 <input type="url" class="form-control" name="social_instagram" value="<?= $val('social_instagram') ?>" placeholder="https://instagram.com/...">
             </div>
+            <div class="col-md-6">
+                <label class="form-label">Facebook URL</label>
+                <input type="url" class="form-control" name="social_facebook" value="<?= $val('social_facebook') ?>" placeholder="https://facebook.com/...">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">X (Twitter) URL</label>
+                <input type="url" class="form-control" name="social_x" value="<?= $val('social_x') ?>" placeholder="https://x.com/...">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">WhatsApp Number (US)</label>
+                <input type="text" class="form-control" name="whatsapp_us" value="<?= $val('whatsapp_us') ?>" placeholder="+1 360-803-5283">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">WhatsApp Number (Uganda)</label>
+                <input type="text" class="form-control" name="whatsapp_ug" value="<?= $val('whatsapp_ug') ?>" placeholder="+256 749 257996">
+            </div>
         </div>
     </div>
 
