@@ -84,11 +84,11 @@ INSERT INTO story_finance_entries (year, category, percentage, sort_order) VALUE
     (2018, 'Organization Growth', 25.00, 4);
 
 -- --------------------------------------------------
--- story_board_letter — placeholder Lorem Ipsum letter as currently live on the site
+-- story_board_letter — inspirational quote requested in the client's 9/17/26 feedback
 -- --------------------------------------------------
 INSERT INTO story_board_letter (id, author_name, author_title, body) VALUES
-    (1, 'Elliot Smith', 'Board Member',
-     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. This placeholder letter mirrors what is currently live on bloombeyondborders.org and should be replaced with a real board letter via the admin back office.');
+    (1, 'Mahatma Gandhi', '',
+     'The best way to find yourself is to lose yourself in the service of others.');
 
 -- --------------------------------------------------
 -- gallery_albums / gallery_images — real photos fetched from the live site's
