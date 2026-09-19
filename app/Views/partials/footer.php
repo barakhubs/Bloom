@@ -12,7 +12,7 @@
                     <?php else: ?>
                         <h4 class="text-white mb-4">Bloom Beyond Borders</h4>
                     <?php endif; ?>
-                    <p>Transforming lives with knowledge, care, and courage &mdash; empowering vulnerable children and women in Uganda, and supporting African immigrant families in the US.</p>
+                    <p>Transforming lives with knowledge, care, and courage &mdash; empowering vulnerable children and women in Uganda, and supporting African immigrant families in the USA.</p>
                     <div class="d-flex mt-3">
                         <?php if (!empty($settings['social_linkedin'])): ?>
                             <a class="btn btn-square btn-outline-light rounded-circle me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
