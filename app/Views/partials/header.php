@@ -122,14 +122,6 @@ $navLinks = [
 
                 <!-- Desktop nav (lg and up); mobile uses the offcanvas panel below instead -->
                 <div class="d-none d-lg-flex align-items-center flex-grow-1">
-                    <div class="d-flex me-4">
-                        <?php if (!empty($settings['social_linkedin'])): ?>
-                            <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-                        <?php endif; ?>
-                        <?php if (!empty($settings['social_instagram'])): ?>
-                            <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                        <?php endif; ?>
-                    </div>
                     <div class="navbar-nav">
                         <?php foreach ($navLinks as $href => $label): ?>
                             <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
@@ -152,14 +144,6 @@ $navLinks = [
                 <?php foreach ($navLinks as $href => $label): ?>
                     <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                 <?php endforeach; ?>
-            </div>
-            <div class="d-flex mt-auto pt-4">
-                <?php if (!empty($settings['social_linkedin'])): ?>
-                    <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-                <?php endif; ?>
-                <?php if (!empty($settings['social_instagram'])): ?>
-                    <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                <?php endif; ?>
             </div>
         </div>
     </div>
