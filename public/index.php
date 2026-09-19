@@ -44,6 +44,7 @@ use App\Controllers\GalleryController;
 use App\Controllers\HomeController;
 use App\Controllers\PartnersController;
 use App\Controllers\ServicesController;
+use App\Controllers\SitemapController;
 use App\Controllers\StoryController;
 use App\Controllers\TeamController;
 use App\Core\Router;
@@ -61,6 +62,7 @@ $router->get('/blog/{slug}', [BlogController::class, 'show']);
 $router->post('/blog/{slug}/comments', [BlogController::class, 'submitComment']);
 $router->get('/contact', [ContactController::class, 'index']);
 $router->post('/contact', [ContactController::class, 'submit']);
+$router->get('/sitemap.xml', [SitemapController::class, 'index']);
 
 $router->get('/admin/login', [AdminAuthController::class, 'showLogin']);
 $router->post('/admin/login', [AdminAuthController::class, 'login']);
