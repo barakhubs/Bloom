@@ -21,7 +21,7 @@
         <div class="slide-item" style="background-image: url('/img/community-harvest.jpeg');">
             <div class="container">
                 <div class="carousel-text">
-                    <h1 class="display-5 text-uppercase text-white mb-3">Our Vision</h1>
+                    <h2 class="display-5 text-uppercase text-white mb-3">Our Vision</h2>
                     <p class="fs-5 text-white mb-5">To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet.</p>
                     <div class="d-flex mt-4">
                         <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
@@ -46,7 +46,7 @@
             </div>
             <div class="col-lg-6">
                 <p class="section-title bg-white text-start text-primary pe-3">About Us</p>
-                <h1 class="display-6 mb-4 wow fadeIn" data-wow-delay="0.2s">Transforming Lives with Knowledge, Care, and Courage</h1>
+                <h2 class="display-6 mb-4 wow fadeIn" data-wow-delay="0.2s">Transforming Lives with Knowledge, Care, and Courage</h2>
                 <p class="mb-4 wow fadeIn" data-wow-delay="0.3s">"To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet." Bloom Beyond Borders empowers vulnerable children and women in Uganda through education, healthcare, economic opportunity, and emotional support, while assisting African immigrant families in the US with culturally responsive guidance.</p>
                 <div class="row g-4 pt-2">
                     <div class="col-sm-6 wow fadeIn" data-wow-delay="0.4s">
@@ -76,7 +76,7 @@
     <div class="container">
         <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
             <p class="section-title bg-white text-center text-primary px-3">Programs</p>
-            <h1 class="display-6 mb-4">Our Core Programs</h1>
+            <h2 class="display-6 mb-4">Our Core Programs</h2>
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
@@ -124,7 +124,7 @@
         <div class="row g-0">
             <div class="col-lg-7 donate-text bg-light py-5 wow fadeIn" data-wow-delay="0.1s">
                 <div class="d-flex flex-column justify-content-center h-100 p-5 wow fadeIn" data-wow-delay="0.3s">
-                    <h1 class="display-6 mb-4">Help Us Break the Cycle of Poverty</h1>
+                    <h2 class="display-6 mb-4">Help Us Break the Cycle of Poverty</h2>
                     <p class="fs-5 mb-0">Your support funds scholarships, healthcare, and skills training for children and women in Uganda, and integration support for African immigrant families in the United States of America.</p>
                 </div>
             </div>
@@ -146,7 +146,7 @@
     <div class="container">
         <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
             <p class="section-title bg-white text-center text-primary px-3">Our Team</p>
-            <h1 class="display-6 mb-4">Meet Our Board of Directors</h1>
+            <h2 class="display-6 mb-4">Meet Our Board of Directors</h2>
         </div>
         <div class="row g-4">
             <?php foreach ($teamMembers as $member): ?>
@@ -182,7 +182,7 @@
     <div class="container">
         <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
             <p class="section-title bg-white text-center text-primary px-3">Gallery</p>
-            <h1 class="display-6 mb-4">Our Year in Pictures</h1>
+            <h2 class="display-6 mb-4">Our Year in Pictures</h2>
         </div>
         <div class="row g-3">
             <?php foreach ($galleryImages as $image): ?>
@@ -205,7 +205,7 @@
 <div class="container-fluid py-5">
     <div class="container text-center">
         <p class="section-title bg-white text-center text-primary px-3">Our Partners</p>
-        <h1 class="display-6 mb-4">Organizations Working With Us</h1>
+        <h2 class="display-6 mb-4">Organizations Working With Us</h2>
         <div class="row g-4 justify-content-center align-items-center">
             <?php foreach ($partners as $partner): ?>
             <div class="col-6 col-md-3 col-lg-2 wow fadeIn" data-wow-delay="0.1s">

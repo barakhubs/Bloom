@@ -1,14 +1,23 @@
 <?php
 /** @var string|null $title */
+/** @var string|null $description */
+/** @var string|null $ogImage */
+/** @var bool|null $noindex */
 
 use App\Models\Setting;
 
 $title = $title ?? 'Bloom Beyond Borders';
+$description = $description ?? 'Bloom Beyond Borders supports vulnerable children and women in Uganda through education, healthcare, and economic opportunity, and helps African immigrant families in the US integrate with culturally responsive guidance.';
+$ogImage = $ogImage ?? '/img/10.jpeg';
+$noindex = $noindex ?? false;
 $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $currentPath = rtrim($currentPath, '/');
 if ($currentPath === '') {
     $currentPath = '/';
 }
+
+$appConfig = require dirname(__DIR__, 2) . '/Config/app.php';
+$canonicalUrl = rtrim($appConfig['base_url'], '/') . $currentPath;
 
 $settings = Setting::all();
 
@@ -30,8 +39,21 @@ $navLinks = [
     <meta charset="utf-8">
     <title><?= htmlspecialchars($title) ?></title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
+    <meta name="description" content="<?= htmlspecialchars($description) ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl) ?>">
+    <?php if ($noindex): ?>
+        <meta name="robots" content="noindex, follow">
+    <?php endif; ?>
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?= htmlspecialchars($title) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($description) ?>">
+    <meta property="og:url" content="<?= htmlspecialchars($canonicalUrl) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars(rtrim($appConfig['base_url'], '/') . $ogImage) ?>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= htmlspecialchars($title) ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($description) ?>">
+    <meta name="twitter:image" content="<?= htmlspecialchars(rtrim($appConfig['base_url'], '/') . $ogImage) ?>">
 
     <link href="/<?= htmlspecialchars(ltrim($settings['favicon_path'] ?: 'img/favicon.png', '/')) ?>" rel="icon">
 

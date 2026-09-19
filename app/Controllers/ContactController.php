@@ -20,6 +20,7 @@ class ContactController extends Controller
         $this->view('contact/index', [
             'title' => 'Contact - Bloom Beyond Borders',
             'pageTitle' => 'Contact',
+            'description' => 'Get in touch with Bloom Beyond Borders to donate, volunteer, or ask about our programs supporting children and women in Uganda and immigrant families in the USA.',
             'errors' => $errors,
             'old' => $old,
             'success' => $success,

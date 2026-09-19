@@ -7,7 +7,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
     <div class="container">
         <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
             <p class="section-title bg-white text-center text-primary px-3">Board of Directors</p>
-            <h1 class="display-6 mb-4">Meet the People Behind Bloom Beyond Borders</h1>
+            <h2 class="display-6 mb-4">Meet the People Behind Bloom Beyond Borders</h2>
         </div>
 
         <?php if (!empty($teamMembers)): ?>
@@ -48,7 +48,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
         <div class="row g-0">
             <div class="col-lg-7 donate-text bg-light py-5 wow fadeIn" data-wow-delay="0.1s">
                 <div class="d-flex flex-column justify-content-center h-100 p-5 wow fadeIn" data-wow-delay="0.3s">
-                    <h1 class="display-6 mb-4">Join Our Team</h1>
+                    <h2 class="display-6 mb-4">Join Our Team</h2>
                     <p class="fs-5 mb-0">Interested in volunteering or joining the board? We'd love to hear from you.</p>
                 </div>
             </div>

@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Serve real files/directories (css/, js/, img/, lib/, uploads/, robots.txt) as-is;
+# route everything else through the front controller.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]

@@ -10,7 +10,9 @@ class ErrorController extends Controller
     {
         http_response_code(404);
         $this->view('errors/404', [
-            'title' => 'Page Not Found',
+            'title' => 'Page Not Found - Bloom Beyond Borders',
+            'description' => 'The page you are looking for could not be found.',
+            'noindex' => true,
         ]);
     }
 }

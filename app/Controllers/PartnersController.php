@@ -12,6 +12,7 @@ class PartnersController extends Controller
         $this->view('partners/index', [
             'title' => 'Partners - Bloom Beyond Borders',
             'pageTitle' => 'Partners',
+            'description' => 'The organizations partnering with Bloom Beyond Borders to expand education, healthcare, and economic opportunity for children, women, and immigrant families.',
             'partners' => (new Partner())->all(),
         ]);
     }
