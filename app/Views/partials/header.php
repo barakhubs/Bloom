@@ -37,7 +37,7 @@ $navLinks = [
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700&family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -60,7 +60,7 @@ $navLinks = [
     <!-- Topbar Start -->
     <div class="container-fluid bg-white top-bar wow fadeIn" data-wow-delay="0.1s">
         <div class="row align-items-center h-100">
-            <div class="col-lg-4 text-center text-lg-start">
+            <div class="col-lg-3 text-center text-lg-start">
                 <a href="/">
                     <?php if (!empty($settings['site_logo_path'])): ?>
                         <img src="/<?= htmlspecialchars(ltrim($settings['site_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" class="site-logo">
@@ -69,7 +69,7 @@ $navLinks = [
                     <?php endif; ?>
                 </a>
             </div>
-            <div class="col-lg-8 d-none d-lg-block">
+            <div class="col-lg-9 d-none d-lg-block">
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="d-flex justify-content-end">
@@ -122,14 +122,6 @@ $navLinks = [
 
                 <!-- Desktop nav (lg and up); mobile uses the offcanvas panel below instead -->
                 <div class="d-none d-lg-flex align-items-center flex-grow-1">
-                    <div class="d-flex me-4">
-                        <?php if (!empty($settings['social_linkedin'])): ?>
-                            <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-                        <?php endif; ?>
-                        <?php if (!empty($settings['social_instagram'])): ?>
-                            <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                        <?php endif; ?>
-                    </div>
                     <div class="navbar-nav">
                         <?php foreach ($navLinks as $href => $label): ?>
                             <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
@@ -152,14 +144,6 @@ $navLinks = [
                 <?php foreach ($navLinks as $href => $label): ?>
                     <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                 <?php endforeach; ?>
-            </div>
-            <div class="d-flex mt-auto pt-4">
-                <?php if (!empty($settings['social_linkedin'])): ?>
-                    <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-                <?php endif; ?>
-                <?php if (!empty($settings['social_instagram'])): ?>
-                    <a class="btn btn-square btn-dark me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                <?php endif; ?>
             </div>
         </div>
     </div>

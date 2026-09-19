@@ -72,7 +72,7 @@
 
 
 <!-- Programs Start -->
-<div class="container-fluid py-5">
+<div class="container-fluid py-5 bg-light">
     <div class="container">
         <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
             <p class="section-title bg-white text-center text-primary px-3">Programs</p>
@@ -125,7 +125,7 @@
             <div class="col-lg-7 donate-text bg-light py-5 wow fadeIn" data-wow-delay="0.1s">
                 <div class="d-flex flex-column justify-content-center h-100 p-5 wow fadeIn" data-wow-delay="0.3s">
                     <h1 class="display-6 mb-4">Help Us Break the Cycle of Poverty</h1>
-                    <p class="fs-5 mb-0">Your support funds scholarships, healthcare, and skills training for children and women in Uganda, and integration support for African immigrant families in the US.</p>
+                    <p class="fs-5 mb-0">Your support funds scholarships, healthcare, and skills training for children and women in Uganda, and integration support for African immigrant families in the United States of America.</p>
                 </div>
             </div>
             <div class="col-lg-5 donate-form bg-primary py-5 text-center wow fadeIn" data-wow-delay="0.5s">
@@ -154,7 +154,7 @@
                 <div class="team-item h-100 p-4 text-center">
                     <div class="team-detail">
                         <?php if (!empty($member['photo_path'])): ?>
-                            <img class="img-fluid mb-4" style="height:240px;width:100%;object-fit:cover;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
+                            <img class="img-fluid mb-4" style="height:240px;width:100%;object-fit:cover;object-position:top center;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
                         <?php else: ?>
                             <div class="bg-light mb-4 d-flex align-items-center justify-content-center" style="height:240px;width:100%;">
                                 <i class="fa fa-user fa-3x text-primary"></i>

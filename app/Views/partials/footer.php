@@ -12,13 +12,19 @@
                     <?php else: ?>
                         <h4 class="text-white mb-4">Bloom Beyond Borders</h4>
                     <?php endif; ?>
-                    <p>Transforming lives with knowledge, care, and courage &mdash; empowering vulnerable children and women in Uganda, and supporting African immigrant families in the US.</p>
+                    <p>Transforming lives with knowledge, care, and courage &mdash; empowering vulnerable children and women in Uganda, and supporting African immigrant families in the USA.</p>
                     <div class="d-flex mt-3">
                         <?php if (!empty($settings['social_linkedin'])): ?>
                             <a class="btn btn-square btn-outline-light rounded-circle me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
                         <?php endif; ?>
                         <?php if (!empty($settings['social_instagram'])): ?>
                             <a class="btn btn-square btn-outline-light rounded-circle me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_facebook'])): ?>
+                            <a class="btn btn-square btn-outline-light rounded-circle me-2" href="<?= htmlspecialchars($settings['social_facebook']) ?>" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_x'])): ?>
+                            <a class="btn btn-square btn-outline-light rounded-circle me-2" href="<?= htmlspecialchars($settings['social_x']) ?>" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -32,7 +38,13 @@
                     <h4 class="text-white mb-4">Contact</h4>
                     <p class="mb-2"><i class="fa fa-phone-alt me-2"></i><?= htmlspecialchars($settings['contact_phone'] ?? '') ?></p>
                     <p class="mb-2"><i class="fa fa-envelope-open me-2"></i><?= htmlspecialchars($settings['contact_email'] ?? '') ?></p>
-                    <p class="mb-0"><i class="fa fa-map-marker-alt me-2"></i><?= htmlspecialchars($settings['contact_address'] ?? '') ?></p>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-2"></i><?= htmlspecialchars($settings['contact_address'] ?? '') ?></p>
+                    <?php if (!empty($settings['whatsapp_us'])): ?>
+                        <p class="mb-2"><i class="fab fa-whatsapp me-2"></i><a class="text-light" href="https://wa.me/<?= htmlspecialchars(preg_replace('/[^0-9]/', '', $settings['whatsapp_us'])) ?>" target="_blank" rel="noopener"><?= htmlspecialchars($settings['whatsapp_us']) ?> (US)</a></p>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['whatsapp_ug'])): ?>
+                        <p class="mb-0"><i class="fab fa-whatsapp me-2"></i><a class="text-light" href="https://wa.me/<?= htmlspecialchars(preg_replace('/[^0-9]/', '', $settings['whatsapp_ug'])) ?>" target="_blank" rel="noopener"><?= htmlspecialchars($settings['whatsapp_ug']) ?> (Uganda)</a></p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

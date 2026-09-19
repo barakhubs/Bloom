@@ -11,13 +11,13 @@ require dirname(__DIR__) . '/partials/page-header.php';
         </div>
 
         <?php if (!empty($teamMembers)): ?>
-            <div class="row g-4">
+            <div class="row g-4 team-grid">
                 <?php foreach ($teamMembers as $member): ?>
                     <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                         <div class="donation-item h-100 p-4">
                             <div class="d-flex align-items-center mb-3">
                                 <?php if (!empty($member['photo_path'])): ?>
-                                    <img class="rounded-circle flex-shrink-0 me-3" style="width:80px;height:80px;object-fit:cover;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
+                                    <img class="rounded-circle flex-shrink-0 me-3" style="width:80px;height:80px;object-fit:cover;object-position:top center;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
                                 <?php else: ?>
                                     <div class="bg-light rounded-circle flex-shrink-0 me-3 d-flex align-items-center justify-content-center" style="width:80px;height:80px;">
                                         <i class="fa fa-user fa-2x text-primary"></i>

@@ -14,6 +14,13 @@
     --bs-tertiary: #797E88;
 }
 
+/* Heading font override - bootstrap.min.css compiles "Josefin Sans" directly into its
+   h1-h6 rule with no var(), so it can't be changed via a custom property; overridden
+   here instead per this project's "never hand-edit bootstrap.min.css" convention. */
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+    font-family: "Poppins", sans-serif;
+}
+
 .back-to-top {
     position: fixed;
     display: none;
@@ -94,7 +101,7 @@
 }
 
 .top-bar .site-logo {
-    height: 90px;
+    height: 70px;
     width: auto;
     max-width: 100%;
     object-fit: contain;
@@ -102,12 +109,17 @@
 
 @media (max-width: 991.98px) {
     .top-bar .site-logo {
-        height: 65px;
+        height: 55px;
     }
 }
 
 .top-bar h6 {
     letter-spacing: 1px;
+}
+
+.top-bar .col-lg-4 .ms-2 {
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
 
@@ -205,7 +217,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(5, 19, 17, .75) 0%, rgba(5, 19, 17, .45) 55%, rgba(5, 19, 17, .15) 100%);
+    background: linear-gradient(90deg, rgba(5, 19, 17, .55) 0%, rgba(5, 19, 17, .30) 55%, rgba(5, 19, 17, .10) 100%);
 }
 
 .header-carousel .slide-item .container {
@@ -465,12 +477,26 @@
 
 /*** Donation ***/
 .donation-item {
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 0 30px rgba(0, 0, 0, .05);
     transition: .5s;
 }
 
 .donation-item:hover {
     box-shadow: 0 0 30px rgba(0, 0, 0, .1);
+}
+
+.donation-item .btn-primary.w-100 {
+    margin-top: auto;
+}
+
+.donation-item h3 {
+    color: var(--bs-secondary);
+}
+
+.team-grid .donation-item {
+    background: #fdf8ea;
 }
 
 .donation-item .donation-progress {

@@ -20,10 +20,14 @@ INSERT INTO admin_users (email, password_hash) VALUES
 -- --------------------------------------------------
 INSERT INTO settings (`key`, `value`) VALUES
     ('contact_phone', '+256 791-269-955'),
-    ('contact_email', 'agathaasiimwe@gmail.com'),
+    ('contact_email', 'info@bloombeyondborders.org'),
     ('contact_address', '1234 Divi St. #1000 San Francisco, CA 91351'),
-    ('social_linkedin', ''),   -- TODO: set via /admin/settings
-    ('social_instagram', ''),  -- TODO: set via /admin/settings
+    ('social_linkedin', 'https://www.linkedin.com/company/bloom-beyond-borders/'),
+    ('social_instagram', 'https://www.instagram.com/blooombeyondborders/'),
+    ('social_facebook', 'https://www.facebook.com/profile.php?id=61583713474136'),
+    ('social_x', 'https://x.com/BloomBB'),
+    ('whatsapp_us', '+1 360-803-5283'),
+    ('whatsapp_ug', '+256 749 257996'),
     ('site_logo_path', 'img/site-logo.png'),
     ('favicon_path', 'img/favicon.png'),
     ('footer_logo_path', 'img/site-logo.png'),
@@ -84,11 +88,11 @@ INSERT INTO story_finance_entries (year, category, percentage, sort_order) VALUE
     (2018, 'Organization Growth', 25.00, 4);
 
 -- --------------------------------------------------
--- story_board_letter — placeholder Lorem Ipsum letter as currently live on the site
+-- story_board_letter — inspirational quote requested in the client's 9/17/26 feedback
 -- --------------------------------------------------
 INSERT INTO story_board_letter (id, author_name, author_title, body) VALUES
-    (1, 'Elliot Smith', 'Board Member',
-     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. This placeholder letter mirrors what is currently live on bloombeyondborders.org and should be replaced with a real board letter via the admin back office.');
+    (1, 'Mahatma Gandhi', '',
+     'The best way to find yourself is to lose yourself in the service of others.');
 
 -- --------------------------------------------------
 -- gallery_albums / gallery_images — real photos fetched from the live site's
