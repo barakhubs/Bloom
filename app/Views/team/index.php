@@ -11,7 +11,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
         </div>
 
         <?php if (!empty($teamMembers)): ?>
-            <div class="row g-4">
+            <div class="row g-4 team-grid">
                 <?php foreach ($teamMembers as $member): ?>
                     <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                         <div class="donation-item h-100 p-4">

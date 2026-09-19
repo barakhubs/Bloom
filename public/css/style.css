@@ -486,6 +486,14 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     margin-top: auto;
 }
 
+.donation-item h3 {
+    color: var(--bs-secondary);
+}
+
+.team-grid .donation-item {
+    background: #fdf8ea;
+}
+
 .donation-item .donation-progress {
     width: 80px;
 }
