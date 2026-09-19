@@ -60,7 +60,7 @@ $navLinks = [
     <!-- Topbar Start -->
     <div class="container-fluid bg-white top-bar wow fadeIn" data-wow-delay="0.1s">
         <div class="row align-items-center h-100">
-            <div class="col-lg-4 text-center text-lg-start">
+            <div class="col-lg-3 text-center text-lg-start">
                 <a href="/">
                     <?php if (!empty($settings['site_logo_path'])): ?>
                         <img src="/<?= htmlspecialchars(ltrim($settings['site_logo_path'], '/')) ?>" alt="Bloom Beyond Borders" class="site-logo">
@@ -69,7 +69,7 @@ $navLinks = [
                     <?php endif; ?>
                 </a>
             </div>
-            <div class="col-lg-8 d-none d-lg-block">
+            <div class="col-lg-9 d-none d-lg-block">
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="d-flex justify-content-end">
