@@ -1,4 +1,5 @@
 <?php
+
 /** @var array $teamMembers */
 /** @var array $partners */
 /** @var array $galleryImages */
@@ -41,29 +42,32 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/craft2.jpg" alt="Bloom Beyond Borders">
+                    <img class="img-fluid w-100" src="/img/Mother_n_child.png" alt="Bloom Beyond Borders">
                 </div>
             </div>
             <div class="col-lg-6">
                 <p class="section-title bg-white text-start text-primary pe-3">About Us</p>
                 <h2 class="display-6 mb-4 wow fadeIn" data-wow-delay="0.2s">Transforming Lives with Knowledge, Care, and Courage</h2>
-                <p class="mb-4 wow fadeIn" data-wow-delay="0.3s">"To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet." Bloom Beyond Borders empowers vulnerable children and women in Uganda through education, healthcare, economic opportunity, and emotional support, while assisting African immigrant families in the US with culturally responsive guidance.</p>
+                <p class="mb-4 wow fadeIn" data-wow-delay="0.3s">
+                    Bloom Beyond Borders is a nonprofit organization dedicated to uplifting vulnerable children and women in Uganda and supporting African immigrant families in the United States. Rooted in a deep commitment to education, health, and economic empowerment, we work to break cycles of poverty and build stronger, more resilient communities.
+                    We design our programs to offer comprehensive support, encompassing early childhood development ...
+                </p>
                 <div class="row g-4 pt-2">
-                    <div class="col-sm-6 wow fadeIn" data-wow-delay="0.4s">
+                    <div class="col-sm-12 wow fadeIn" data-wow-delay="0.4s">
                         <div class="h-100">
                             <h3>Our Mission</h3>
-                            <p class="text-dark"><i class="fa fa-check text-primary me-2"></i>Education and healthcare access in Uganda</p>
-                            <p class="text-dark"><i class="fa fa-check text-primary me-2"></i>Economic opportunity for women</p>
-                            <p class="text-dark mb-0"><i class="fa fa-check text-primary me-2"></i>Integration support for immigrant families</p>
+                            <p class="text-dark"><i class="fa fa-check text-primary me-2"></i>To uplift vulnerable women and children in Uganda and support African immigrant families in the U.S. through education, healthcare, economic empowerment, and emotional support.</p>
+                            <p class="text-dark"><i class="fa fa-check text-primary me-2"></i>We champion women as the backbone of development, promote climate awareness, and foster strong, culturally connected communities where every family can thrive and lead change.</p>
                         </div>
                     </div>
-                    <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
+                    <!-- <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
                         <div class="h-100 bg-primary p-4 text-center">
                             <p class="fs-5 text-dark">"Every child deserves access to opportunity and every woman deserves the chance to thrive."</p>
                             <a class="btn btn-secondary py-2 px-4" href="/contact">Donate Now</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
+                <a class="btn btn-secondary py-2 px-4" href="/our-story">Read More</a>
             </div>
         </div>
     </div>
@@ -82,7 +86,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/craft3.jpg" alt="Education Support">
+                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/Picture-8.jpg" alt="Education Support">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Education</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Education Support</a>
@@ -141,81 +145,85 @@
 
 
 <?php if (!empty($teamMembers)): ?>
-<!-- Team Start -->
-<div class="container-fluid py-5">
-    <div class="container">
-        <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
-            <p class="section-title bg-white text-center text-primary px-3">Our Team</p>
-            <h2 class="display-6 mb-4">Meet Our Board of Directors</h2>
-        </div>
-        <div class="row g-4">
-            <?php foreach ($teamMembers as $member): ?>
-            <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
-                <div class="team-item h-100 p-4 text-center">
-                    <div class="team-detail">
-                        <?php if (!empty($member['photo_path'])): ?>
-                            <img class="img-fluid mb-4" style="height:240px;width:100%;object-fit:cover;object-position:top center;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
-                        <?php else: ?>
-                            <div class="bg-light mb-4 d-flex align-items-center justify-content-center" style="height:240px;width:100%;">
-                                <i class="fa fa-user fa-3x text-primary"></i>
-                            </div>
-                        <?php endif; ?>
-                        <h3><?= htmlspecialchars($member['name']) ?></h3>
-                        <span><?= htmlspecialchars($member['title']) ?></span>
-                    </div>
-                </div>
+    <!-- Team Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="section-title bg-white text-center text-primary px-3">Our Team</p>
+                <h2 class="display-6 mb-4">Meet Our Board of Directors</h2>
             </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="text-center mt-5">
-            <a href="/our-team" class="btn btn-primary py-3 px-4">Meet the Full Team</a>
+            <div class="row g-4">
+                <?php foreach ($teamMembers as $member): ?>
+                    <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="team-item h-100 p-4 text-center">
+                            <div class="team-detail">
+                                <?php if (!empty($member['photo_path'])): ?>
+                                    <img class="img-fluid mb-4" style="aspect-ratio:1/1;width:100%;object-fit:cover;object-position:center 20%;" src="/<?= htmlspecialchars(ltrim($member['photo_path'], '/')) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
+                                <?php else: ?>
+                                    <div class="bg-light mb-4 d-flex align-items-center justify-content-center" style="aspect-ratio:1/1;width:100%;">
+                                        <i class="fa fa-user fa-3x text-primary"></i>
+                                    </div>
+                                <?php endif; ?>
+                                <h3><?= htmlspecialchars($member['name']) ?></h3>
+                                <span><?= htmlspecialchars($member['title']) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="text-center mt-5">
+                <a href="/our-team" class="btn btn-primary py-3 px-4">Meet the Full Team</a>
+            </div>
         </div>
     </div>
-</div>
-<!-- Team End -->
+    <!-- Team End -->
 <?php endif; ?>
 
 
 <?php if (!empty($galleryImages)): ?>
-<!-- Gallery Teaser Start -->
-<div class="container-fluid py-5 bg-light">
-    <div class="container">
-        <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
-            <p class="section-title bg-white text-center text-primary px-3">Gallery</p>
-            <h2 class="display-6 mb-4">Our Year in Pictures</h2>
-        </div>
-        <div class="row g-3">
-            <?php foreach ($galleryImages as $image): ?>
-            <div class="col-6 col-md-4 col-lg-2 wow fadeIn" data-wow-delay="0.1s">
-                <img class="img-fluid w-100" src="/<?= htmlspecialchars(ltrim($image['image_path'], '/')) ?>" alt="<?= htmlspecialchars($image['caption'] ?? 'Gallery photo') ?>">
+    <!-- Gallery Teaser Start -->
+    <div class="container-fluid py-5 bg-light">
+        <div class="container">
+            <div class="text-center mx-auto wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="section-title bg-white text-center text-primary px-3">Gallery</p>
+                <h2 class="display-6 mb-4">Our Year in Pictures</h2>
             </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="text-center mt-4">
-            <a href="/gallery" class="btn btn-primary py-3 px-4">View Full Gallery</a>
+            <div class="row g-3">
+                <?php foreach ($galleryImages as $image): ?>
+                    <div class="col-6 col-md-4 col-lg-2 wow fadeIn" data-wow-delay="0.1s">
+                        <img class="img-fluid w-100" src="/<?= htmlspecialchars(ltrim($image['image_path'], '/')) ?>" alt="<?= htmlspecialchars($image['caption'] ?? 'Gallery photo') ?>">
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="text-center mt-4">
+                <a href="/gallery" class="btn btn-primary py-3 px-4">View Full Gallery</a>
+            </div>
         </div>
     </div>
-</div>
-<!-- Gallery Teaser End -->
+    <!-- Gallery Teaser End -->
 <?php endif; ?>
 
 
 <?php if (!empty($partners)): ?>
-<!-- Partners Teaser Start -->
-<div class="container-fluid py-5">
-    <div class="container text-center">
-        <p class="section-title bg-white text-center text-primary px-3">Our Partners</p>
-        <h2 class="display-6 mb-4">Organizations Working With Us</h2>
-        <div class="row g-4 justify-content-center align-items-center">
-            <?php foreach ($partners as $partner): ?>
-            <div class="col-6 col-md-3 col-lg-2 wow fadeIn" data-wow-delay="0.1s">
-                <?php if (!empty($partner['link_url'])): ?><a href="<?= htmlspecialchars($partner['link_url']) ?>" target="_blank" rel="noopener"><?php endif; ?>
-                <img class="img-fluid" src="/<?= htmlspecialchars(ltrim($partner['logo_path'], '/')) ?>" alt="<?= htmlspecialchars($partner['name']) ?>">
-                <?php if (!empty($partner['link_url'])): ?></a><?php endif; ?>
+    <!-- Partners Teaser Start -->
+    <div class="container-fluid py-5">
+        <div class="container text-center">
+            <p class="section-title bg-white text-center text-primary px-3">Our Partners</p>
+            <h2 class="display-6 mb-4">Organizations Working With Us</h2>
+            <div class="row g-4 justify-content-center align-items-center">
+                <?php foreach ($partners as $partner): ?>
+                    <div class="col-6 col-md-3 col-lg-2 wow fadeIn" data-wow-delay="0.1s">
+                        <?php if (!empty($partner['link_url'])): ?><a href="<?= htmlspecialchars($partner['link_url']) ?>" target="_blank" rel="noopener"><?php endif; ?>
+                            <?php if (!empty($partner['logo_path'])): ?>
+                                <img class="img-fluid" src="/<?= htmlspecialchars(ltrim($partner['logo_path'], '/')) ?>" alt="<?= htmlspecialchars($partner['name']) ?>">
+                            <?php else: ?>
+                                <span class="h5 text-secondary"><?= htmlspecialchars($partner['name']) ?></span>
+                            <?php endif; ?>
+                            <?php if (!empty($partner['link_url'])): ?></a><?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
         </div>
     </div>
-</div>
-<!-- Partners Teaser End -->
+    <!-- Partners Teaser End -->
 <?php endif; ?>

@@ -97,7 +97,7 @@ Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both ve
 - `admin_users` (id, email, password_hash, created_at)
 - `settings` (key varchar primary key, value text) — social links, contact phone/email/address, SMTP config, logo/favicon/footer-logo paths
 - `team_members` (id, name, title, bio, photo_path, sort_order)
-- `partners` (id, name, logo_path, link_url, sort_order)
+- `partners` (id, name, logo_path nullable, tagline, description, link_url, sort_order) — description is plain text: blank line = new paragraph, `## ` line = subheading. Existing DBs: apply `database/migrations/2026-10-02_partner_details.sql`
 - `gallery_albums` (id, name, slug, sort_order)
 - `gallery_images` (id, album_id FK → gallery_albums, ON DELETE CASCADE, image_path, caption, sort_order)
 - `blog_posts` (id, title, slug, body, featured_image_path, status[draft/published], published_at)

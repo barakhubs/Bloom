@@ -112,3 +112,17 @@ require dirname(__DIR__) . '/partials/page-header.php';
 </div>
 <!-- Board Letter End -->
 <?php endif; ?>
+
+
+<!-- Registration Start -->
+<div class="container-fluid pb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center wow fadeIn" data-wow-delay="0.1s">
+                <p class="mb-3"><strong>Bloom Beyond Borders</strong> is a registered nonprofit organization in the state of Washington. We are recognized as a 501(c)(3) tax-exempt organization. EIN: 41-2711180. Registered with the Washington Secretary of State Charities Program.</p>
+                <p class="fw-bold text-secondary mb-0">Growing hope. Creating opportunity. Helping communities bloom.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Registration End -->

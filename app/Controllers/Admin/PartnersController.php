@@ -94,6 +94,8 @@ class PartnersController extends AdminController
         }
 
         $name = trim((string) ($_POST['name'] ?? ''));
+        $tagline = trim((string) ($_POST['tagline'] ?? ''));
+        $description = trim((string) ($_POST['description'] ?? ''));
         $linkUrl = trim((string) ($_POST['link_url'] ?? ''));
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
 
@@ -109,12 +111,6 @@ class PartnersController extends AdminController
             $errors['logo'] = $e->getMessage();
         }
 
-        // A partner must have a logo (schema: logo_path NOT NULL) - required on create,
-        // but an edit without a new upload keeps the existing one via update()'s null check.
-        if ($id === null && $logoPath === null && !isset($errors['logo'])) {
-            $errors['logo'] = 'A logo image is required.';
-        }
-
         if (!empty($errors)) {
             $_SESSION['partner_errors'] = $errors;
             header('Location: ' . $redirectTo);
@@ -123,15 +119,17 @@ class PartnersController extends AdminController
 
         $model = new Partner();
         $linkUrlOrNull = $linkUrl !== '' ? $linkUrl : null;
+        $taglineOrNull = $tagline !== '' ? $tagline : null;
+        $descriptionOrNull = $description !== '' ? $description : null;
 
         if ($id === null) {
-            $model->create($name, (string) $logoPath, $linkUrlOrNull, $sortOrder);
+            $model->create($name, $logoPath, $taglineOrNull, $descriptionOrNull, $linkUrlOrNull, $sortOrder);
         } else {
             $existing = $model->find($id);
             if ($logoPath !== null && $existing !== null && !empty($existing['logo_path'])) {
                 Upload::delete($existing['logo_path']);
             }
-            $model->update($id, $name, $logoPath, $linkUrlOrNull, $sortOrder);
+            $model->update($id, $name, $logoPath, $taglineOrNull, $descriptionOrNull, $linkUrlOrNull, $sortOrder);
         }
 
         header('Location: /admin/partners');

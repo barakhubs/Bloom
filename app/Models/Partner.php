@@ -20,29 +20,29 @@ class Partner extends Model
         return $row !== false ? $row : null;
     }
 
-    public function create(string $name, string $logoPath, ?string $linkUrl, int $sortOrder): void
+    public function create(string $name, ?string $logoPath, ?string $tagline, ?string $description, ?string $linkUrl, int $sortOrder): void
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO partners (name, logo_path, link_url, sort_order) VALUES (?, ?, ?, ?)'
+            'INSERT INTO partners (name, logo_path, tagline, description, link_url, sort_order) VALUES (?, ?, ?, ?, ?, ?)'
         );
-        $stmt->execute([$name, $logoPath, $linkUrl, $sortOrder]);
+        $stmt->execute([$name, $logoPath, $tagline, $description, $linkUrl, $sortOrder]);
     }
 
-    public function update(int $id, string $name, ?string $logoPath, ?string $linkUrl, int $sortOrder): void
+    public function update(int $id, string $name, ?string $logoPath, ?string $tagline, ?string $description, ?string $linkUrl, int $sortOrder): void
     {
         if ($logoPath !== null) {
             $stmt = $this->db->prepare(
-                'UPDATE partners SET name = ?, logo_path = ?, link_url = ?, sort_order = ? WHERE id = ?'
+                'UPDATE partners SET name = ?, logo_path = ?, tagline = ?, description = ?, link_url = ?, sort_order = ? WHERE id = ?'
             );
-            $stmt->execute([$name, $logoPath, $linkUrl, $sortOrder, $id]);
+            $stmt->execute([$name, $logoPath, $tagline, $description, $linkUrl, $sortOrder, $id]);
 
             return;
         }
 
         $stmt = $this->db->prepare(
-            'UPDATE partners SET name = ?, link_url = ?, sort_order = ? WHERE id = ?'
+            'UPDATE partners SET name = ?, tagline = ?, description = ?, link_url = ?, sort_order = ? WHERE id = ?'
         );
-        $stmt->execute([$name, $linkUrl, $sortOrder, $id]);
+        $stmt->execute([$name, $tagline, $description, $linkUrl, $sortOrder, $id]);
     }
 
     public function delete(int $id): void

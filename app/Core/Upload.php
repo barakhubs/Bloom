@@ -76,7 +76,14 @@ class Upload
      */
     public static function delete(string $relativePath): void
     {
-        $full = dirname(__DIR__, 2) . '/public/' . ltrim($relativePath, '/');
+        // Only remove files store() created. Seeded content points at shared assets
+        // under public/img/ (also used by static pages), which must never be unlinked.
+        $relativePath = ltrim($relativePath, '/');
+        if (!str_starts_with($relativePath, 'uploads/') || str_contains($relativePath, '..')) {
+            return;
+        }
+
+        $full = dirname(__DIR__, 2) . '/public/' . $relativePath;
         if (is_file($full)) {
             @unlink($full);
         }
