@@ -14,15 +14,24 @@ require dirname(__DIR__) . '/partials/page-header.php';
                 <p class="section-title bg-white text-start text-primary pe-3">Contact</p>
                 <h2 class="display-6 mb-4">If You Have Any Query, Please Contact Us</h2>
                 <p class="mb-4"><i class="fa fa-phone-alt text-primary me-2"></i><?= htmlspecialchars($settings['contact_phone'] ?? '') ?></p>
+                <?php if (!empty($settings['whatsapp_us']) || !empty($settings['whatsapp_ug'])): ?>
+                    <p class="mb-4"><i class="fab fa-whatsapp text-primary me-2"></i><?= htmlspecialchars(implode(' / ', array_filter([$settings['whatsapp_us'] ?? '', $settings['whatsapp_ug'] ?? '']))) ?></p>
+                <?php endif; ?>
                 <p class="mb-4"><i class="fa fa-envelope-open text-primary me-2"></i><?= htmlspecialchars($settings['contact_email'] ?? '') ?></p>
                 <p class="mb-4"><i class="fa fa-map-marker-alt text-primary me-2"></i><?= htmlspecialchars($settings['contact_address'] ?? '') ?></p>
-                <?php if (!empty($settings['social_linkedin']) || !empty($settings['social_instagram'])): ?>
+                <?php if (!empty($settings['social_linkedin']) || !empty($settings['social_instagram']) || !empty($settings['social_facebook']) || !empty($settings['social_x'])): ?>
                     <div class="d-flex mt-4">
                         <?php if (!empty($settings['social_linkedin'])): ?>
                             <a class="btn btn-square btn-primary me-2" href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
                         <?php endif; ?>
                         <?php if (!empty($settings['social_instagram'])): ?>
                             <a class="btn btn-square btn-primary me-2" href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_facebook'])): ?>
+                            <a class="btn btn-square btn-primary me-2" href="<?= htmlspecialchars($settings['social_facebook']) ?>" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_x'])): ?>
+                            <a class="btn btn-square btn-primary me-2" href="<?= htmlspecialchars($settings['social_x']) ?>" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
