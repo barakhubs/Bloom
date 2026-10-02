@@ -17,7 +17,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/craft3.jpg" alt="Education Support">
+                    <img class="img-fluid w-100" src="/img/Educ.jpg" alt="Education Support">
                 </div>
             </div>
             <div class="col-lg-6">
@@ -44,7 +44,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 order-lg-2 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/community-harvest.jpeg" alt="Early Childhood Education">
+                    <img class="img-fluid w-100" src="/img/vocational-training.jpeg" alt="Women Empowerment Workshops">
                 </div>
             </div>
             <div class="col-lg-6 order-lg-1">
@@ -73,7 +73,7 @@
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.2s">
                 <div class="about-img">
-                    <img class="img-fluid w-100" src="/img/craft7.jpg" alt="Support for African Immigrant Families">
+                    <img class="img-fluid w-100" src="/img/craft2.jpg" alt="Support for African Immigrant Families">
                 </div>
             </div>
             <div class="col-lg-6">

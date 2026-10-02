@@ -97,7 +97,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/craft6.jpg" alt="Women Empowerment Workshops">
+                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/vocational-training.jpeg" alt="Women Empowerment Workshops">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Empowerment</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Women Empowerment Workshops</a>
@@ -108,7 +108,7 @@
             <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
                 <div class="donation-item h-100 p-4">
                     <div class="position-relative mb-4">
-                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/crafts.jpg" alt="Immigrant Family Assistance">
+                        <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/img/craft2.jpg" alt="Immigrant Family Assistance">
                         <span class="btn btn-sm btn-secondary px-3 position-absolute top-0 end-0">Family Support</span>
                     </div>
                     <a href="/our-services" class="h3 d-inline-block">Immigrant Family Assistance</a>
