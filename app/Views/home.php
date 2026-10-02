@@ -214,7 +214,11 @@
                 <?php foreach ($partners as $partner): ?>
                     <div class="col-6 col-md-3 col-lg-2 wow fadeIn" data-wow-delay="0.1s">
                         <?php if (!empty($partner['link_url'])): ?><a href="<?= htmlspecialchars($partner['link_url']) ?>" target="_blank" rel="noopener"><?php endif; ?>
-                            <img class="img-fluid" src="/<?= htmlspecialchars(ltrim($partner['logo_path'], '/')) ?>" alt="<?= htmlspecialchars($partner['name']) ?>">
+                            <?php if (!empty($partner['logo_path'])): ?>
+                                <img class="img-fluid" src="/<?= htmlspecialchars(ltrim($partner['logo_path'], '/')) ?>" alt="<?= htmlspecialchars($partner['name']) ?>">
+                            <?php else: ?>
+                                <span class="h5 text-secondary"><?= htmlspecialchars($partner['name']) ?></span>
+                            <?php endif; ?>
                             <?php if (!empty($partner['link_url'])): ?></a><?php endif; ?>
                     </div>
                 <?php endforeach; ?>

@@ -27,11 +27,20 @@ $actionUrl = $isEdit ? '/admin/partners/' . (int) $partner['id'] : '/admin/partn
             <?php endif; ?>
             <input type="file" class="form-control<?= isset($errors['logo']) ? ' is-invalid' : '' ?>" name="logo" accept=".jpg,.jpeg,.png,.webp,.svg">
             <?php if (isset($errors['logo'])): ?><div class="invalid-feedback"><?= htmlspecialchars($errors['logo']) ?></div><?php endif; ?>
-            <?php if (!$isEdit): ?><div class="form-text">Required.</div><?php endif; ?>
+            <div class="form-text">Optional. Without a logo, the partner's name is shown instead.</div>
         </div>
         <div class="col-md-4">
             <label class="form-label">Sort Order</label>
             <input type="number" class="form-control" name="sort_order" value="<?= (int) ($partner['sort_order'] ?? 0) ?>">
+        </div>
+        <div class="col-12">
+            <label class="form-label">Tagline (optional)</label>
+            <input type="text" class="form-control" name="tagline" value="<?= htmlspecialchars($partner['tagline'] ?? '') ?>" placeholder="e.g. Growing Hope and Opportunity Together">
+        </div>
+        <div class="col-12">
+            <label class="form-label">Description (optional)</label>
+            <textarea class="form-control" name="description" rows="14"><?= htmlspecialchars($partner['description'] ?? '') ?></textarea>
+            <div class="form-text">Shown on the Partners page. Separate paragraphs with a blank line. Start a line with <code>## </code> to make it a subheading.</div>
         </div>
     </div>
 

@@ -24,7 +24,7 @@
             <?php endif; ?>
             <?php foreach ($partners as $partner): ?>
                 <tr>
-                    <td><img src="/<?= htmlspecialchars(ltrim($partner['logo_path'], '/')) ?>" alt="" style="max-height:40px;max-width:80px;"></td>
+                    <td><?php if (!empty($partner['logo_path'])): ?><img src="/<?= htmlspecialchars(ltrim($partner['logo_path'], '/')) ?>" alt="" style="max-height:40px;max-width:80px;"><?php else: ?><span class="text-muted small">No logo</span><?php endif; ?></td>
                     <td><?= htmlspecialchars($partner['name']) ?></td>
                     <td>
                         <?php if (!empty($partner['link_url'])): ?>
