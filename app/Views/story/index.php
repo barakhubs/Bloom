@@ -27,7 +27,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
         <div class="row justify-content-center">
             <div class="col-lg-9 text-center">
                 <p class="section-title bg-white text-center text-primary px-3">About the Founder</p>
-                <img class="rounded-circle mb-4" style="width:160px;height:160px;object-fit:cover;object-position:top center;" src="/img/IMG_4089.jpg" alt="Dr. Agatha Asiimwe">
+                <img class="rounded-circle mb-4" style="width:160px;height:160px;object-fit:cover;object-position:top center;" src="/img/IMG_4089.jpeg" alt="Dr. Agatha Asiimwe">
                 <h2 class="display-6 mb-4">Dr. Agatha Asiimwe</h2>
                 <p class="fs-5">Raised in rural Uganda and shaped by life across Norway, Australia, and the United States, our founder knows both the challenges of limited resources and the struggles immigrants face in new environments.</p>
                 <p class="fs-5">Dr. Asiimwe founded Bloom Beyond Borders, a mission-driven organization inspired by a lifetime of cross-cultural experiences and a deep commitment to empowering underserved communities. Born and raised in rural Uganda, she witnessed firsthand the daily challenges faced by children and women striving for opportunity.</p>
