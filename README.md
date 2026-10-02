@@ -27,11 +27,17 @@ branch-by-branch implementation roadmap.
    mysql -u root -p bloom < database/seed.sql
    ```
 
-3. **Configure the database connection**, if your setup differs from the
-   defaults (host `127.0.0.1`, database `bloom`, user `root`, empty
-   password). Either edit `app/Config/db.php` directly, or set environment
-   variables before starting PHP: `DB_HOST`, `DB_PORT`, `DB_DATABASE`,
-   `DB_USERNAME`, `DB_PASSWORD`.
+3. **Configure the database connection.** Copy the example config (the real
+   one is git-ignored so server credentials never get committed):
+
+   ```
+   cp app/Config/db.example.php app/Config/db.php
+   ```
+
+   The defaults are host `127.0.0.1`, database `bloom`, user `root`, empty
+   password. If your setup differs, either edit `app/Config/db.php`, or set
+   environment variables before starting PHP: `DB_HOST`, `DB_PORT`,
+   `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
 
 4. **Run the dev server**
 

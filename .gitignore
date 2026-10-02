@@ -6,3 +6,5 @@
 Thumbs.db
 .DS_Store
 /website-feedback/
+/.kilo/
+/app/Config/db.php
