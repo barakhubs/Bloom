@@ -8,12 +8,13 @@ use App\Core\Csrf;
 use App\Core\Database;
 use App\Core\Slug;
 use App\Core\Upload;
-use App\Models\BlogComment;
 use App\Models\BlogPost;
 use RuntimeException;
 
 class BlogController extends AdminController
 {
+    protected ?string $permission = 'blog';
+
     public function index(): void
     {
         $this->view('admin/blog/index', [
@@ -87,35 +88,6 @@ class BlogController extends AdminController
         }
 
         header('Location: /admin/blog');
-        exit;
-    }
-
-    public function commentsIndex(): void
-    {
-        $this->view('admin/blog/comments', [
-            'title' => 'Comments - Bloom Beyond Borders Admin',
-            'comments' => (new BlogComment())->allWithPostTitles(),
-            'csrfToken' => Csrf::token(),
-        ]);
-    }
-
-    public function approveComment(string $id): void
-    {
-        if (Csrf::verify($_POST['csrf_token'] ?? null)) {
-            (new BlogComment())->approve((int) $id);
-        }
-
-        header('Location: /admin/comments');
-        exit;
-    }
-
-    public function deleteComment(string $id): void
-    {
-        if (Csrf::verify($_POST['csrf_token'] ?? null)) {
-            (new BlogComment())->delete((int) $id);
-        }
-
-        header('Location: /admin/comments');
         exit;
     }
 

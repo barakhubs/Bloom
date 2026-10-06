@@ -49,22 +49,31 @@ branch-by-branch implementation roadmap.
 
 ## Default admin login
 
-The seed data creates one admin account:
+The seed data creates one **Super Admin** account:
 
 - **Email:** `admin@bloombeyondborders.org`
 - **Password:** `ChangeMe123!`
 
-Sign in at `/admin/login` and **change this password immediately** — there is
-currently no in-app "change password" screen, so update it directly in the
-database with a fresh bcrypt hash:
+Sign in at `/admin/login` and **change this password immediately** under
+**My Account** (`/admin/account`).
+
+## Users & roles
+
+More people can be given back-office access from **Users** (`/admin/users`):
+enter their name, email and role, and they receive an invite link to set their
+own password. **Roles** (`/admin/roles`) control which sections each role can
+manage; the built-in Super Admin role can do everything. Invite and
+password-reset emails go through the SMTP settings below — until SMTP is
+configured, the admin is shown the link to copy and send manually.
+
+**Upgrading an existing database** (created before users & roles existed):
 
 ```
-php -r "echo password_hash('your-new-password', PASSWORD_DEFAULT), PHP_EOL;"
+mysql -u root -p bloom < database/migrations/2026-10-06_admin_rbac.sql
 ```
 
-```sql
-UPDATE admin_users SET password_hash = '<hash from above>' WHERE email = 'admin@bloombeyondborders.org';
-```
+Existing admin accounts become active Super Admins, so current logins keep
+working.
 
 ## Outgoing email (SMTP)
 

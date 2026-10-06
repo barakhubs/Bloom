@@ -15,6 +15,8 @@ use RuntimeException;
 
 class GalleryController extends AdminController
 {
+    protected ?string $permission = 'gallery';
+
     public function index(): void
     {
         $this->view('admin/gallery/index', [

@@ -29,15 +29,19 @@ session_start();
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+use App\Controllers\Admin\AccountController as AdminAccountController;
 use App\Controllers\Admin\AuthController as AdminAuthController;
 use App\Controllers\Admin\BlogController as AdminBlogController;
+use App\Controllers\Admin\CommentsController as AdminCommentsController;
 use App\Controllers\Admin\ContactController as AdminContactController;
 use App\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Controllers\Admin\PartnersController as AdminPartnersController;
+use App\Controllers\Admin\RolesController as AdminRolesController;
 use App\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Controllers\Admin\StoryController as AdminStoryController;
 use App\Controllers\Admin\TeamController as AdminTeamController;
+use App\Controllers\Admin\UsersController as AdminUsersController;
 use App\Controllers\BlogController;
 use App\Controllers\ContactController;
 use App\Controllers\GalleryController;
@@ -67,6 +71,10 @@ $router->get('/sitemap.xml', [SitemapController::class, 'index']);
 $router->get('/admin/login', [AdminAuthController::class, 'showLogin']);
 $router->post('/admin/login', [AdminAuthController::class, 'login']);
 $router->post('/admin/logout', [AdminAuthController::class, 'logout']);
+$router->get('/admin/forgot-password', [AdminAuthController::class, 'showForgotPassword']);
+$router->post('/admin/forgot-password', [AdminAuthController::class, 'forgotPassword']);
+$router->get('/admin/set-password/{token}', [AdminAuthController::class, 'showSetPassword']);
+$router->post('/admin/set-password/{token}', [AdminAuthController::class, 'setPassword']);
 $router->get('/admin', [AdminDashboardController::class, 'index']);
 $router->get('/admin/settings', [AdminSettingsController::class, 'index']);
 $router->post('/admin/settings', [AdminSettingsController::class, 'update']);
@@ -104,9 +112,9 @@ $router->get('/admin/blog/{id}/edit', [AdminBlogController::class, 'edit']);
 $router->post('/admin/blog/{id}', [AdminBlogController::class, 'update']);
 $router->post('/admin/blog/{id}/delete', [AdminBlogController::class, 'destroy']);
 
-$router->get('/admin/comments', [AdminBlogController::class, 'commentsIndex']);
-$router->post('/admin/comments/{id}/approve', [AdminBlogController::class, 'approveComment']);
-$router->post('/admin/comments/{id}/delete', [AdminBlogController::class, 'deleteComment']);
+$router->get('/admin/comments', [AdminCommentsController::class, 'index']);
+$router->post('/admin/comments/{id}/approve', [AdminCommentsController::class, 'approve']);
+$router->post('/admin/comments/{id}/delete', [AdminCommentsController::class, 'destroy']);
 
 $router->get('/admin/contact', [AdminContactController::class, 'index']);
 $router->post('/admin/contact/{id}/delete', [AdminContactController::class, 'destroy']);
@@ -123,5 +131,23 @@ $router->get('/admin/story/finance/{id}/edit', [AdminStoryController::class, 'ed
 $router->post('/admin/story/finance/{id}', [AdminStoryController::class, 'updateFinance']);
 $router->post('/admin/story/finance/{id}/delete', [AdminStoryController::class, 'destroyFinance']);
 $router->post('/admin/story/letter', [AdminStoryController::class, 'updateLetter']);
+
+$router->get('/admin/users', [AdminUsersController::class, 'index']);
+$router->get('/admin/users/create', [AdminUsersController::class, 'create']);
+$router->post('/admin/users', [AdminUsersController::class, 'store']);
+$router->get('/admin/users/{id}/edit', [AdminUsersController::class, 'edit']);
+$router->post('/admin/users/{id}', [AdminUsersController::class, 'update']);
+$router->post('/admin/users/{id}/delete', [AdminUsersController::class, 'destroy']);
+$router->post('/admin/users/{id}/send-link', [AdminUsersController::class, 'sendLink']);
+
+$router->get('/admin/roles', [AdminRolesController::class, 'index']);
+$router->get('/admin/roles/create', [AdminRolesController::class, 'create']);
+$router->post('/admin/roles', [AdminRolesController::class, 'store']);
+$router->get('/admin/roles/{id}/edit', [AdminRolesController::class, 'edit']);
+$router->post('/admin/roles/{id}', [AdminRolesController::class, 'update']);
+$router->post('/admin/roles/{id}/delete', [AdminRolesController::class, 'destroy']);
+
+$router->get('/admin/account', [AdminAccountController::class, 'index']);
+$router->post('/admin/account', [AdminAccountController::class, 'update']);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

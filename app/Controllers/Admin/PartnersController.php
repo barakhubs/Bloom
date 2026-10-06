@@ -10,6 +10,8 @@ use App\Models\Partner;
 
 class PartnersController extends AdminController
 {
+    protected ?string $permission = 'partners';
+
     public function index(): void
     {
         $this->view('admin/partners/index', [

@@ -3,26 +3,30 @@
 
 use App\Core\Auth;
 use App\Core\Csrf;
-use App\Models\AdminUser;
 use App\Models\Setting;
 
 $title = $title ?? 'Admin - Bloom Beyond Borders';
-$currentAdmin = Auth::check() ? (new AdminUser())->findById(Auth::id()) : null;
+$currentAdmin = Auth::user();
 $logoutCsrfToken = Csrf::token();
 $faviconPath = Setting::get('favicon_path', 'img/favicon.png');
+$footerLogoPath = (string) Setting::get('footer_logo_path', '');
 
 $adminNavPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$adminNavLinks = [
-    '/admin' => 'Dashboard',
-    '/admin/settings' => 'Settings',
-    '/admin/team' => 'Team',
-    '/admin/partners' => 'Partners',
-    '/admin/gallery' => 'Gallery',
-    '/admin/blog' => 'Blog',
-    '/admin/comments' => 'Comments',
-    '/admin/story' => 'Our Story',
-    '/admin/contact' => 'Contact Submissions',
-];
+// href => [label, required permission (null = every logged-in user)]
+$adminNavLinks = array_filter([
+    '/admin' => ['Dashboard', null],
+    '/admin/settings' => ['Settings', 'settings'],
+    '/admin/team' => ['Team', 'team'],
+    '/admin/partners' => ['Partners', 'partners'],
+    '/admin/gallery' => ['Gallery', 'gallery'],
+    '/admin/blog' => ['Blog', 'blog'],
+    '/admin/comments' => ['Comments', 'comments'],
+    '/admin/story' => ['Our Story', 'story'],
+    '/admin/contact' => ['Contact Submissions', 'contact'],
+    '/admin/users' => ['Users', 'users'],
+    '/admin/roles' => ['Roles', 'users'],
+    '/admin/account' => ['My Account', null],
+], fn (array $link) => $link[1] === null || Auth::can($link[1]));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,10 +51,20 @@ $adminNavLinks = [
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary px-4">
-        <a class="navbar-brand fw-bold text-primary text-uppercase" href="/admin">Bloom Beyond Borders <span class="text-white">Admin</span></a>
+        <?php if ($footerLogoPath !== ''): ?>
+            <a class="navbar-brand d-flex align-items-center" href="/admin">
+                <img src="/<?= htmlspecialchars(ltrim($footerLogoPath, '/')) ?>" alt="Bloom Beyond Borders" style="height: 40px; width: auto; max-width: 220px; object-fit: contain;">
+                <span class="text-white fw-bold text-uppercase ms-3">Admin</span>
+            </a>
+        <?php else: ?>
+            <a class="navbar-brand fw-bold text-primary text-uppercase" href="/admin">Bloom Beyond Borders <span class="text-white">Admin</span></a>
+        <?php endif; ?>
         <div class="ms-auto d-flex align-items-center">
             <?php if ($currentAdmin): ?>
-                <span class="text-white small me-3"><?= htmlspecialchars($currentAdmin['email']) ?></span>
+                <a href="/admin/account" class="text-white small me-3 text-decoration-none" title="<?= htmlspecialchars($currentAdmin['email']) ?>">
+                    <?= htmlspecialchars($currentAdmin['name'] ?: $currentAdmin['email']) ?>
+                    <span class="opacity-75">&middot; <?= htmlspecialchars($currentAdmin['role_name']) ?></span>
+                </a>
             <?php endif; ?>
             <a href="/" class="btn btn-sm btn-outline-light me-2" target="_blank">View Site</a>
             <form action="/admin/logout" method="post" class="d-inline m-0">
@@ -63,7 +77,7 @@ $adminNavLinks = [
     <div class="d-flex">
         <nav class="admin-sidebar bg-secondary flex-shrink-0 py-3">
             <div class="nav flex-column">
-                <?php foreach ($adminNavLinks as $href => $label): ?>
+                <?php foreach ($adminNavLinks as $href => [$label]): ?>
                     <?php $isActive = $href === '/admin' ? $adminNavPath === '/admin' : str_starts_with($adminNavPath, $href); ?>
                     <a href="<?= htmlspecialchars($href) ?>" class="nav-link px-4 py-2<?= $isActive ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                 <?php endforeach; ?>

@@ -9,6 +9,8 @@ use App\Models\Story;
 
 class StoryController extends AdminController
 {
+    protected ?string $permission = 'story';
+
     public function index(): void
     {
         $errors = $_SESSION['story_errors'] ?? [];
