@@ -6,14 +6,57 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- --------------------------------------------------
--- admin_users — single back-office account (feature/admin-auth)
+-- roles / role_permissions — back-office RBAC (feature/admin-users-rbac).
+-- A role with is_system = 1 (Super Admin) implicitly has every permission
+-- and can't be edited or deleted. Permission slugs are defined in code
+-- (App\Core\Permissions::ALL).
+-- --------------------------------------------------
+CREATE TABLE IF NOT EXISTS roles (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    is_system TINYINT(1) NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_roles_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS role_permissions (
+    role_id INT UNSIGNED NOT NULL,
+    permission VARCHAR(50) NOT NULL,
+    PRIMARY KEY (role_id, permission),
+    CONSTRAINT fk_role_permissions_role FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------
+-- admin_users — back-office accounts. Invited users have no password until
+-- they follow their invite link (status 'invited' -> 'active').
 -- --------------------------------------------------
 CREATE TABLE IF NOT EXISTS admin_users (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL DEFAULT '',
     email VARCHAR(191) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NULL,
+    role_id INT UNSIGNED NOT NULL,
+    status ENUM('invited', 'active', 'disabled') NOT NULL DEFAULT 'invited',
+    last_login_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY uq_admin_users_email (email)
+    UNIQUE KEY uq_admin_users_email (email),
+    CONSTRAINT fk_admin_users_role FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------
+-- admin_user_tokens — single-use invite / password-reset links. Only the
+-- SHA-256 hash of the token is stored; the raw token lives in the emailed URL.
+-- --------------------------------------------------
+CREATE TABLE IF NOT EXISTS admin_user_tokens (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    token_hash CHAR(64) NOT NULL,
+    purpose ENUM('invite', 'reset') NOT NULL,
+    expires_at DATETIME NOT NULL,
+    used_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_admin_user_tokens_hash (token_hash),
+    CONSTRAINT fk_admin_user_tokens_user FOREIGN KEY (user_id) REFERENCES admin_users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------

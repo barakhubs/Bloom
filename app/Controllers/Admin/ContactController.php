@@ -8,6 +8,8 @@ use App\Models\ContactSubmission;
 
 class ContactController extends AdminController
 {
+    protected ?string $permission = 'contact';
+
     public function index(): void
     {
         $this->view('admin/contact/index', [

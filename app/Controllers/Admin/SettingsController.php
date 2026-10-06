@@ -9,6 +9,8 @@ use App\Models\Setting;
 
 class SettingsController extends AdminController
 {
+    protected ?string $permission = 'settings';
+
     private const TEXT_FIELDS = [
         'contact_phone',
         'contact_email',

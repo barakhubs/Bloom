@@ -11,7 +11,6 @@ This project rebuilds it as a **vanilla PHP MVC** backend + **vanilla HTML/CSS/J
 - No npm / JS build step / bundler — frontend stays static vanilla JS + the template's existing jQuery-plugin vendor libs.
 - No newsletter signup feature.
 - No multi-language (EN/FR) toggle — English only for v1.
-- No roles/permissions system in the back office — a single admin account.
 
 ## Tech stack
 
@@ -55,10 +54,18 @@ Old template colors → new brand colors:
 
 ## Back office (admin)
 
-Single admin account, login at `/admin/login`, session-based.
+Multiple back-office users with role-based permissions (client feedback, `feature/admin-users-rbac`). Login at `/admin/login`, session-based.
+
+**Users & permissions:**
+- Permissions are a fixed list in code, one per section: `App\Core\Permissions::ALL` (`settings`, `team`, `partners`, `gallery`, `blog`, `comments`, `story`, `contact`, `users`). Dashboard and My Account are open to every logged-in user.
+- **Roles** (`/admin/roles`) — admins create custom roles and tick which sections each one can manage. The built-in **Super Admin** role (`roles.is_system = 1`) implicitly has everything and can't be edited or deleted. A role can't be deleted while users are assigned to it.
+- **Users** (`/admin/users`) — admin enters name + email + role, and the user gets a single-use **invite link** (72h) by email to set their own password. Admins can resend invites, send password-reset links (2h), and enable/disable or delete users. If SMTP isn't configured, the link is shown to the admin to copy and send themselves.
+- Guards: you can't delete or disable yourself or change your own role; the last active Super Admin can't be removed or demoted; only a Super Admin can grant the Super Admin role or edit/delete a Super Admin.
+- **My Account** (`/admin/account`) — change your own name/password. **Forgot password** on the login page sends a reset link (same response whether or not the email exists).
+- Enforcement: each admin controller declares `protected ?string $permission = '<slug>';` and `AdminController`'s constructor returns 403 if `Auth::can()` fails. The sidebar and dashboard tiles hide sections the user can't access.
 
 **Sections:**
-- **Dashboard** — quick counts (pending comments, contact submissions, team/partner/gallery counts).
+- **Dashboard** — quick counts (pending comments, contact submissions, team/partner/gallery counts), limited to the sections the user can access.
 - **Site Settings** — social links (LinkedIn, Instagram, etc.), SMTP config (host/port/username/password/encryption/from-name/from-email) used by PHPMailer, site logo, favicon, footer logo (three separate uploads).
 - **Team** — CRUD for board/team members (name, title, bio, photo).
 - **Partners** — CRUD for partner orgs (name, logo, optional link).
@@ -94,7 +101,10 @@ Routing is a small hand-written `Router` (method + path → controller action), 
 
 Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both verified by direct import into the local XAMPP `bloom` database (MariaDB 10.4.32).
 
-- `admin_users` (id, email, password_hash, created_at)
+- `roles` (id, name unique, is_system, created_at) + `role_permissions` (role_id FK → roles ON DELETE CASCADE, permission slug; PK both)
+- `admin_users` (id, name, email, password_hash nullable until the invite is accepted, role_id FK → roles ON DELETE RESTRICT, status[invited/active/disabled], last_login_at, created_at)
+- `admin_user_tokens` (id, user_id FK → admin_users ON DELETE CASCADE, token_hash = SHA-256 of the emailed token, purpose[invite/reset], expires_at, used_at, created_at)
+- Existing DBs: apply `database/migrations/2026-10-06_admin_rbac.sql` (existing admins become active Super Admins)
 - `settings` (key varchar primary key, value text) — social links, contact phone/email/address, SMTP config, logo/favicon/footer-logo paths
 - `team_members` (id, name, title, bio, photo_path, sort_order)
 - `partners` (id, name, logo_path nullable, tagline, description, link_url, sort_order) — description is plain text: blank line = new paragraph, `## ` line = subheading. Existing DBs: apply `database/migrations/2026-10-02_partner_details.sql`
@@ -115,9 +125,11 @@ Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both ve
 
 Verified in `polish/security-hardening-docs` via a systematic audit (not just written intent) — see that branch's commit for the specifics of what was checked.
 
-- `password_hash()` / `password_verify()` for the single admin account; no plaintext passwords anywhere.
+- `password_hash()` / `password_verify()` for all back-office accounts; no plaintext passwords anywhere.
+- RBAC: permission checked server-side in `AdminController`'s constructor (403 for GET and POST alike), not just hidden in the nav. `Auth::user()` re-reads the user + role permissions from the DB on every request, so role edits apply immediately and disabling/deleting a user ends their existing session on their next request. Invited and disabled accounts get the same generic login error as a wrong password.
+- Invite/reset tokens: 32 random bytes, only the SHA-256 hash stored, single-use (consumed atomically), expiring (72h invite / 2h reset), and issuing a new one voids earlier unused ones.
 - PDO prepared statements for every query — no string-concatenated SQL anywhere in the codebase (confirmed: zero raw `->exec()` calls, zero variable-interpolated SQL strings).
-- CSRF token (session-bound, checked on POST) on every state-changing form, public and admin alike — confirmed all 30 registered POST routes trace back to a `Csrf::verify()` check, and every check fails closed (blocks + redirects on mismatch, never silently continues).
+- CSRF token (session-bound, checked on POST) on every state-changing form, public and admin alike — confirmed all registered POST routes (30 at audit time, 40 after `feature/admin-users-rbac`) trace back to a `Csrf::verify()` check, and every check fails closed (blocks + redirects on mismatch, never silently continues).
 - File uploads (team photos, partner logos, gallery images, site logo/favicon/footer logo, blog featured images) all go through one `App\Core\Upload::store()` helper: extension allowlist, actual file content checked against the claimed extension via `finfo` for raster formats, a max size cap, and a randomly-generated filename on save (the original filename is never trusted or reused). SVG uploads (logos only) are additionally scanned for `<script>` tags, `on*=` event-handler attributes, and `javascript:` URIs before being accepted — verified against both a clean and a deliberately malicious SVG through the real upload pipeline.
 - Session cookie hardened: `HttpOnly` always, `SameSite=Lax`, `Secure` auto-enabled when served over HTTPS.
 - `debug` config now derives from `APP_ENV` (off in production unless explicitly overridden via `APP_DEBUG`) instead of being hardcoded on; when off, uncaught exceptions show a generic message and log the real error server-side rather than leaking stack traces/file paths — verified directly (a test exception with a fake "sensitive" string appeared in the log but not in the HTTP response).

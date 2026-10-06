@@ -10,6 +10,8 @@ use App\Models\TeamMember;
 
 class TeamController extends AdminController
 {
+    protected ?string $permission = 'team';
+
     public function index(): void
     {
         $this->view('admin/team/index', [

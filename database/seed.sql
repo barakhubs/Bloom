@@ -8,12 +8,17 @@
 -- Replace all of it via the admin back office once real content is available.
 
 -- --------------------------------------------------
--- admin_users
+-- roles + admin_users
 -- --------------------------------------------------
+-- Built-in Super Admin role: implicitly has every permission (no
+-- role_permissions rows needed) and can't be edited or deleted.
+INSERT INTO roles (id, name, is_system) VALUES
+    (1, 'Super Admin', 1);
+
 -- Default login: admin@bloombeyondborders.org / ChangeMe123!
--- CHANGE THIS PASSWORD IMMEDIATELY after first login (feature/admin-auth).
-INSERT INTO admin_users (email, password_hash) VALUES
-    ('admin@bloombeyondborders.org', '$2y$10$wiKAx9tcVkSN2HLPjDWAIOOrcNhlqBHQcWkWiUSVqgGTZ2oqVs6oa');
+-- CHANGE THIS PASSWORD IMMEDIATELY after first login (Admin -> My Account).
+INSERT INTO admin_users (name, email, password_hash, role_id, status) VALUES
+    ('Administrator', 'admin@bloombeyondborders.org', '$2y$10$wiKAx9tcVkSN2HLPjDWAIOOrcNhlqBHQcWkWiUSVqgGTZ2oqVs6oa', 1, 'active');
 
 -- --------------------------------------------------
 -- settings
