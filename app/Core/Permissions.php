@@ -19,6 +19,8 @@ class Permissions
         'story' => 'Our Story',
         'contact' => 'Contact Submissions',
         'donations' => 'Donations',
+        'shop' => 'Shop Products',
+        'orders' => 'Shop Orders',
         'users' => 'Users & Roles',
     ];
 }

@@ -123,6 +123,88 @@ class Mailer
         return self::sendTo($settings, (string) ($settings['contact_email'] ?? ''), '', "New donation: {$amount} ({$towards})", $body, 'donation notification');
     }
 
+    /** Order details to the buyer once the webhook confirms payment (no account needed). */
+    public static function sendOrderConfirmation(array $order): bool
+    {
+        if (empty($order['customer_email'])) {
+            return false;
+        }
+
+        $settings = Setting::all();
+        $siteName = $settings['smtp_from_name'] ?: 'Bloom Beyond Borders';
+
+        $body = 'Hi ' . ($order['customer_name'] ?: 'there') . ",\n\n"
+            . "Thank you for your order! Every purchase supports our work with children, women, and families.\n\n"
+            . self::orderSummary($order)
+            . "\nWe'll email you again when your order ships. If you have any questions, just reply to this email"
+            . (!empty($settings['contact_email']) ? " or write to {$settings['contact_email']}" : '') . ".\n\n"
+            . "{$siteName}\n";
+
+        return self::sendTo($settings, $order['customer_email'], $order['customer_name'] ?: '', "Your {$siteName} order {$order['reference']}", $body, 'order confirmation');
+    }
+
+    /** New paid order heads-up to the org's contact email; flags items that just sold out. */
+    public static function sendOrderNotification(array $order, array $soldOut = []): bool
+    {
+        $settings = Setting::all();
+
+        $body = "A new shop order has been paid and is ready to ship.\n\n"
+            . 'Customer: ' . ($order['customer_name'] ?: '(no name)') . ' <' . ($order['customer_email'] ?: 'no email') . '>'
+            . (!empty($order['customer_phone']) ? ", {$order['customer_phone']}" : '') . "\n\n"
+            . self::orderSummary($order)
+            . (!empty($soldOut) ? "\nNow out of stock: " . implode(', ', $soldOut) . "\n" : '')
+            . "\nManage it in the admin under Orders.\n";
+
+        return self::sendTo($settings, (string) ($settings['contact_email'] ?? ''), '', "New order {$order['reference']} (" . Money::format((int) $order['total_cents']) . ')', $body, 'order notification');
+    }
+
+    /** "Your order has shipped" to the buyer, sent when an admin marks it shipped. */
+    public static function sendOrderShipped(array $order): bool
+    {
+        if (empty($order['customer_email'])) {
+            return false;
+        }
+
+        $settings = Setting::all();
+        $siteName = $settings['smtp_from_name'] ?: 'Bloom Beyond Borders';
+
+        $body = 'Hi ' . ($order['customer_name'] ?: 'there') . ",\n\n"
+            . "Good news: your order {$order['reference']} is on its way.\n\n"
+            . self::orderSummary($order)
+            . "\nThank you for supporting {$siteName}.\n";
+
+        return self::sendTo($settings, $order['customer_email'], $order['customer_name'] ?: '', "Your order {$order['reference']} has shipped", $body, 'order shipped email');
+    }
+
+    /** Plain-text items, totals and ship-to block shared by the order emails. */
+    private static function orderSummary(array $order): string
+    {
+        $text = "Order: {$order['reference']}\n\n";
+
+        foreach ($order['items'] as $item) {
+            $text .= (int) $item['quantity'] . ' x ' . $item['product_name'] . ' - '
+                . Money::format((int) $item['unit_price_cents'] * (int) $item['quantity']) . "\n";
+        }
+
+        $text .= "\nSubtotal: " . Money::format((int) $order['subtotal_cents']) . "\n"
+            . 'Shipping: ' . Money::format((int) $order['shipping_cents']) . "\n"
+            . 'Total: ' . Money::format((int) $order['total_cents']) . "\n";
+
+        $address = array_filter([
+            $order['ship_name'] ?? null,
+            $order['ship_line1'] ?? null,
+            $order['ship_line2'] ?? null,
+            trim(implode(' ', array_filter([$order['ship_city'] ?? null, $order['ship_state'] ?? null, $order['ship_postal_code'] ?? null]))),
+            $order['ship_country'] ?? null,
+        ]);
+
+        if (!empty($address)) {
+            $text .= "\nShipping to:\n" . implode("\n", $address) . "\n";
+        }
+
+        return $text;
+    }
+
     /** Plain-text email to one recipient; false + log on any failure (never throws). */
     private static function sendTo(array $settings, string $to, string $toName, string $subject, string $body, string $context): bool
     {

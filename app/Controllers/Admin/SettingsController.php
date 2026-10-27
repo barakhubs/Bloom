@@ -4,6 +4,8 @@ namespace App\Controllers\Admin;
 
 use App\Core\AdminController;
 use App\Core\Csrf;
+use App\Core\Money;
+use App\Core\Shop;
 use App\Core\Upload;
 use App\Models\Setting;
 
@@ -84,6 +86,22 @@ class SettingsController extends AdminController
             } elseif ($stripeWebhookSecret !== '') {
                 Setting::set('stripe_webhook_secret', $stripeWebhookSecret);
             }
+        }
+
+        Setting::set('shop_enabled', isset($_POST['shop_enabled']) ? '1' : '0');
+
+        $shippingCents = Money::parse((string) ($_POST['shop_shipping'] ?? '0'));
+        if ($shippingCents === null) {
+            $errors['shop_shipping'] = 'Enter the shipping charge in dollars, e.g. 10 or 7.50.';
+        } else {
+            Setting::set('shop_shipping_flat_cents', (string) $shippingCents);
+        }
+
+        $countries = Shop::parseCountries((string) ($_POST['shop_ship_countries'] ?? ''));
+        if (empty($countries)) {
+            $errors['shop_ship_countries'] = 'Enter at least one two-letter country code, e.g. US.';
+        } else {
+            Setting::set('shop_ship_countries', implode(',', $countries));
         }
 
         try {

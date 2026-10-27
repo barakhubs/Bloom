@@ -4,6 +4,8 @@
 /** @var string|null $ogImage */
 /** @var bool|null $noindex */
 
+use App\Core\Cart;
+use App\Core\Shop;
 use App\Models\Setting;
 
 $title = $title ?? 'Bloom Beyond Borders';
@@ -31,6 +33,11 @@ $navLinks = [
     '/blog' => 'Blog',
     '/contact' => 'Contact',
 ];
+$shopEnabled = Shop::enabled();
+if ($shopEnabled) {
+    $navLinks = array_slice($navLinks, 0, -1, true) + ['/shop' => 'Shop'] + array_slice($navLinks, -1, null, true);
+}
+$cartCount = $shopEnabled ? Cart::count() : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -149,7 +156,13 @@ $navLinks = [
                             <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                         <?php endforeach; ?>
                     </div>
-                    <a href="/donate" class="btn btn-secondary ms-auto py-2 px-4">Donate</a>
+                    <?php if ($shopEnabled): ?>
+                        <a href="/cart" class="nav-link text-white ms-auto me-3 position-relative" aria-label="Cart (<?= $cartCount ?> items)">
+                            <i class="fa fa-cart-shopping fa-lg"></i>
+                            <?php if ($cartCount > 0): ?><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary"><?= $cartCount ?></span><?php endif; ?>
+                        </a>
+                    <?php endif; ?>
+                    <a href="/donate" class="btn btn-secondary py-2 px-4<?= $shopEnabled ? '' : ' ms-auto' ?>">Donate</a>
                 </div>
             </nav>
         </div>
@@ -168,7 +181,10 @@ $navLinks = [
                     <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                 <?php endforeach; ?>
             </div>
-            <a href="/donate" class="btn btn-primary mt-4 py-3">Donate</a>
+            <?php if ($shopEnabled): ?>
+                <a href="/cart" class="btn btn-outline-light mt-4 py-3"><i class="fa fa-cart-shopping me-2"></i>Cart<?= $cartCount > 0 ? ' (' . $cartCount . ')' : '' ?></a>
+            <?php endif; ?>
+            <a href="/donate" class="btn btn-primary mt-3 py-3">Donate</a>
         </div>
     </div>
     <!-- Mobile Off-canvas Nav End -->
