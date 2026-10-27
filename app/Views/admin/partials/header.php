@@ -12,26 +12,48 @@ $faviconPath = Setting::get('favicon_path', 'img/favicon.png');
 $footerLogoPath = (string) Setting::get('footer_logo_path', '');
 
 $adminNavPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-// href => [label, required permission (null = every logged-in user)]
-$adminNavLinks = array_filter([
-    '/admin' => ['Dashboard', null],
-    '/admin/settings' => ['Settings', 'settings'],
-    '/admin/team' => ['Team', 'team'],
-    '/admin/partners' => ['Partners', 'partners'],
-    '/admin/gallery' => ['Gallery', 'gallery'],
-    '/admin/blog' => ['Blog', 'blog'],
-    '/admin/comments' => ['Comments', 'comments'],
-    '/admin/story' => ['Our Story', 'story'],
-    '/admin/contact' => ['Contact Submissions', 'contact'],
-    '/admin/donations' => ['Donations', 'donations'],
-    '/admin/donation-schemes' => ['Donation Schemes', 'donations'],
-    '/admin/orders' => ['Orders', 'orders'],
-    '/admin/products' => ['Products', 'shop'],
-    '/admin/customers' => ['Customers', 'customers'],
-    '/admin/users' => ['Users', 'users'],
-    '/admin/roles' => ['Roles', 'users'],
-    '/admin/account' => ['My Account', null],
-], fn (array $link) => $link[1] === null || Auth::can($link[1]));
+// Section heading ('' = no heading) => [href => [label, icon, required permission (null = every logged-in user)]].
+// Links the current user can't access are dropped, and so are sections left empty.
+$adminNavSections = array_filter(array_map(
+    fn (array $links) => array_filter($links, fn (array $link) => $link[2] === null || Auth::can($link[2])),
+    [
+        '' => [
+            '/admin' => ['Dashboard', 'fa-gauge', null],
+        ],
+        'Content' => [
+            '/admin/story' => ['Our Story', 'fa-book-open', 'story'],
+            '/admin/team' => ['Team', 'fa-people-group', 'team'],
+            '/admin/partners' => ['Partners', 'fa-handshake', 'partners'],
+            '/admin/gallery' => ['Gallery', 'fa-images', 'gallery'],
+            '/admin/blog' => ['Blog Posts', 'fa-newspaper', 'blog'],
+        ],
+        'Inbox' => [
+            '/admin/comments' => ['Comments', 'fa-comments', 'comments'],
+            '/admin/contact' => ['Contact Messages', 'fa-envelope', 'contact'],
+        ],
+        'Fundraising' => [
+            '/admin/donations' => ['Donations', 'fa-hand-holding-heart', 'donations'],
+            '/admin/donation-schemes' => ['Donation Schemes', 'fa-bullseye', 'donations'],
+        ],
+        'Shop' => [
+            '/admin/orders' => ['Orders', 'fa-box', 'orders'],
+            '/admin/products' => ['Products', 'fa-tags', 'shop'],
+            '/admin/customers' => ['Customers', 'fa-user-group', 'customers'],
+        ],
+        'Administration' => [
+            '/admin/users' => ['Users', 'fa-users-gear', 'users'],
+            '/admin/roles' => ['Roles', 'fa-user-shield', 'users'],
+            '/admin/settings' => ['Site Settings', 'fa-gear', 'settings'],
+        ],
+        'You' => [
+            '/admin/account' => ['My Account', 'fa-circle-user', null],
+        ],
+    ]
+));
+// Exact match, or a sub-page of the link ("/admin/orders/5" lights up "Orders").
+$isAdminNavActive = fn (string $href) => $href === '/admin'
+    ? $adminNavPath === '/admin'
+    : $adminNavPath === $href || str_starts_with($adminNavPath, $href . '/');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,6 +73,9 @@ $adminNavLinks = array_filter([
         .admin-sidebar .nav-link { color: rgba(255, 255, 255, .75); border-left: 3px solid transparent; }
         .admin-sidebar .nav-link:hover { color: #fff; }
         .admin-sidebar .nav-link.active { color: #fff; font-weight: bold; border-left-color: var(--bs-primary); background: rgba(255, 255, 255, .06); }
+        .admin-sidebar .nav-link i { width: 1.25em; margin-right: .6rem; text-align: center; opacity: .85; }
+        .admin-sidebar .nav-heading { color: rgba(255, 255, 255, .5); font-size: .7rem; font-weight: bold; letter-spacing: .08em; text-transform: uppercase; padding: 1rem 1.5rem .35rem; }
+        .admin-sidebar .nav-heading:first-child { padding-top: .25rem; }
     </style>
 </head>
 
@@ -82,9 +107,15 @@ $adminNavLinks = array_filter([
     <div class="d-flex">
         <nav class="admin-sidebar bg-secondary flex-shrink-0 py-3">
             <div class="nav flex-column">
-                <?php foreach ($adminNavLinks as $href => [$label]): ?>
-                    <?php $isActive = $href === '/admin' ? $adminNavPath === '/admin' : str_starts_with($adminNavPath, $href); ?>
-                    <a href="<?= htmlspecialchars($href) ?>" class="nav-link px-4 py-2<?= $isActive ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
+                <?php foreach ($adminNavSections as $heading => $links): ?>
+                    <?php if ($heading !== ''): ?>
+                        <div class="nav-heading"><?= htmlspecialchars((string) $heading) ?></div>
+                    <?php endif; ?>
+                    <?php foreach ($links as $href => [$label, $icon]): ?>
+                        <a href="<?= htmlspecialchars($href) ?>" class="nav-link px-4 py-2<?= $isAdminNavActive($href) ? ' active' : '' ?>"<?= $isAdminNavActive($href) ? ' aria-current="page"' : '' ?>>
+                            <i class="fa <?= $icon ?>"></i><?= htmlspecialchars($label) ?>
+                        </a>
+                    <?php endforeach; ?>
                 <?php endforeach; ?>
             </div>
         </nav>
