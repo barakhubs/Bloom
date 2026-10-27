@@ -21,6 +21,7 @@ class Permissions
         'donations' => 'Donations',
         'shop' => 'Shop Products',
         'orders' => 'Shop Orders',
+        'customers' => 'Customer Accounts',
         'users' => 'Users & Roles',
     ];
 }

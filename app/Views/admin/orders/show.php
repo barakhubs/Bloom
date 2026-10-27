@@ -72,7 +72,17 @@ $cityLine = trim(implode(' ', array_filter([$order['ship_city'], $order['ship_st
         </div>
 
         <div class="bg-white p-4 shadow-sm">
-            <h5 class="mb-3">Customer</h5>
+            <h5 class="mb-3">Customer
+                <?php if (!empty($order['customer_id'])): ?>
+                    <?php if (\App\Core\Auth::can('customers')): ?>
+                        <a href="/admin/customers/<?= (int) $order['customer_id'] ?>" class="badge bg-secondary text-decoration-none align-middle ms-1">Account</a>
+                    <?php else: ?>
+                        <span class="badge bg-secondary align-middle ms-1">Account</span>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <span class="badge bg-light text-dark border align-middle ms-1">Guest</span>
+                <?php endif; ?>
+            </h5>
             <p class="mb-1"><?= htmlspecialchars($order['customer_name'] ?: '—') ?></p>
             <?php if ($order['customer_email']): ?><p class="mb-1"><a href="mailto:<?= htmlspecialchars($order['customer_email']) ?>"><?= htmlspecialchars($order['customer_email']) ?></a></p><?php endif; ?>
             <?php if ($order['customer_phone']): ?><p class="mb-3"><?= htmlspecialchars($order['customer_phone']) ?></p><?php endif; ?>

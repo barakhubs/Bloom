@@ -21,6 +21,7 @@ class DashboardController extends AdminController
         ['Gallery Albums', 'gallery', 'SELECT COUNT(*) FROM gallery_albums', false, '/admin/gallery'],
         ['Gallery Images', 'gallery', 'SELECT COUNT(*) FROM gallery_images', false, '/admin/gallery'],
         ['Published Posts', 'blog', "SELECT COUNT(*) FROM blog_posts WHERE status = 'published'", false, '/admin/blog'],
+        ['Customer Accounts', 'customers', 'SELECT COUNT(*) FROM customers', false, '/admin/customers'],
         ['Users', 'users', 'SELECT COUNT(*) FROM admin_users', false, '/admin/users'],
     ];
 

@@ -229,10 +229,13 @@ CREATE TABLE IF NOT EXISTS donations (
     status ENUM('pending', 'paid', 'expired', 'failed') NOT NULL DEFAULT 'pending',
     stripe_session_id VARCHAR(255) NULL UNIQUE,
     stripe_payment_intent_id VARCHAR(255) NULL,
+    customer_id INT UNSIGNED NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     paid_at DATETIME NULL,
     CONSTRAINT fk_donations_scheme FOREIGN KEY (scheme_id)
         REFERENCES donation_schemes (id) ON DELETE SET NULL,
+    CONSTRAINT fk_donations_customer FOREIGN KEY (customer_id)
+        REFERENCES customers (id) ON DELETE SET NULL,
     KEY idx_donations_status (status),
     KEY idx_donations_scheme_status (scheme_id, status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -275,11 +278,14 @@ CREATE TABLE IF NOT EXISTS orders (
     status ENUM('pending', 'paid', 'shipped', 'cancelled', 'expired') NOT NULL DEFAULT 'pending',
     stripe_session_id VARCHAR(255) NULL UNIQUE,
     stripe_payment_intent_id VARCHAR(255) NULL,
+    customer_id INT UNSIGNED NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     paid_at DATETIME NULL,
     shipped_at DATETIME NULL,
     KEY idx_orders_status (status),
-    KEY idx_orders_email (customer_email)
+    KEY idx_orders_email (customer_email),
+    CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id)
+        REFERENCES customers (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- product_name / unit_price_cents are snapshots: the order keeps what was
@@ -295,6 +301,51 @@ CREATE TABLE IF NOT EXISTS order_items (
         REFERENCES orders (id) ON DELETE CASCADE,
     CONSTRAINT fk_order_items_product FOREIGN KEY (product_id)
         REFERENCES products (id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------
+-- Customer accounts (feature/customer-accounts) — optional; guest checkout
+-- and guest donations keep working. Deleting a customer keeps their orders
+-- and donations (customer_id SET NULL).
+-- --------------------------------------------------
+CREATE TABLE IF NOT EXISTS customers (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(191) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    phone VARCHAR(50) NULL,
+    email_verified_at DATETIME NULL,
+    stripe_customer_id VARCHAR(255) NULL,
+    ship_line1 VARCHAR(255) NULL,
+    ship_line2 VARCHAR(255) NULL,
+    ship_city VARCHAR(120) NULL,
+    ship_state VARCHAR(120) NULL,
+    ship_postal_code VARCHAR(30) NULL,
+    ship_country CHAR(2) NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_login_at DATETIME NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Same rules as admin_user_tokens: SHA-256 hash only, single-use, expiring.
+CREATE TABLE IF NOT EXISTS customer_tokens (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT UNSIGNED NOT NULL,
+    token_hash CHAR(64) NOT NULL,
+    purpose ENUM('verify', 'reset') NOT NULL,
+    expires_at DATETIME NOT NULL,
+    used_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_customer_tokens_hash (token_hash),
+    CONSTRAINT fk_customer_tokens_customer FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS wishlist_items (
+    customer_id INT UNSIGNED NOT NULL,
+    product_id INT UNSIGNED NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (customer_id, product_id),
+    CONSTRAINT fk_wishlist_customer FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE CASCADE,
+    CONSTRAINT fk_wishlist_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

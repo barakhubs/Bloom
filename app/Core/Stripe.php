@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Models\Customer;
 use App\Models\Setting;
 use Stripe\Event;
 use Stripe\StripeClient;
@@ -59,6 +60,61 @@ class Stripe
         }
 
         return \Stripe\Webhook::constructEvent($payload, $signatureHeader, $secret);
+    }
+
+    /**
+     * The Stripe Customer id for a signed-in account, created on first use and
+     * refreshed from the profile each time, so Checkout pre-fills the email,
+     * name, phone and saved shipping address. Null (logged) if Stripe fails -
+     * callers then fall back to the plain guest flow.
+     */
+    public static function customerFor(array $customer): ?string
+    {
+        $client = self::client();
+
+        if ($client === null) {
+            return null;
+        }
+
+        // Blank optional fields are left out entirely (the SDK would send null as "").
+        $present = fn (array $fields) => array_filter($fields, fn ($value) => $value !== null && $value !== '');
+        $params = $present([
+            'email' => $customer['email'],
+            'name' => $customer['name'],
+            'phone' => $customer['phone'],
+        ]) + ['metadata' => ['customer_id' => (string) $customer['id']]];
+
+        if (!empty($customer['ship_line1'])) {
+            $params['shipping'] = $present(['name' => $customer['name'], 'phone' => $customer['phone']]) + [
+                'address' => $present([
+                    'line1' => $customer['ship_line1'],
+                    'line2' => $customer['ship_line2'],
+                    'city' => $customer['ship_city'],
+                    'state' => $customer['ship_state'],
+                    'postal_code' => $customer['ship_postal_code'],
+                    'country' => $customer['ship_country'],
+                ]),
+            ];
+        }
+
+        try {
+            if (!empty($customer['stripe_customer_id'])) {
+                try {
+                    return $client->customers->update($customer['stripe_customer_id'], $params)->id;
+                } catch (\Stripe\Exception\InvalidRequestException $e) {
+                    // Deleted in the Stripe dashboard, or created under other keys - make a fresh one below.
+                }
+            }
+
+            $stripeCustomerId = $client->customers->create($params)->id;
+            (new Customer())->setStripeCustomerId((int) $customer['id'], $stripeCustomerId);
+
+            return $stripeCustomerId;
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            error_log('Stripe: could not prepare customer #' . $customer['id'] . ' - ' . $e->getMessage());
+
+            return null;
+        }
     }
 
     /** Absolute URL on this site, for Checkout success/cancel redirects. */

@@ -84,6 +84,26 @@ class Mailer
         }
     }
 
+    /** Customer account email-verification ('verify') or password-reset ('reset') link. */
+    public static function sendCustomerLink(string $email, string $name, string $url, string $purpose): bool
+    {
+        $settings = Setting::all();
+        $siteName = $settings['smtp_from_name'] ?: 'Bloom Beyond Borders';
+
+        if ($purpose === 'verify') {
+            $subject = "Confirm your {$siteName} account email";
+            $intro = "Thanks for creating an account with {$siteName}. Please confirm your email address by following the link below. "
+                . 'Once confirmed, any earlier orders and donations made with this email will appear in your account.';
+            $expiry = "This link expires in 48 hours. If you didn't create an account, you can ignore this email.";
+        } else {
+            $subject = "Reset your {$siteName} password";
+            $intro = 'A password reset was requested for your account. Follow the link below to choose a new password:';
+            $expiry = "This link expires in 2 hours and can only be used once. If you didn't ask for this, you can ignore this email.";
+        }
+
+        return self::sendTo($settings, $email, $name, $subject, "Hi {$name},\n\n{$intro}\n\n{$url}\n\n{$expiry}\n", "customer {$purpose} email");
+    }
+
     /** Thank-you / receipt to the donor once the webhook confirms payment. Same failure contract. */
     public static function sendDonationReceipt(array $donation): bool
     {

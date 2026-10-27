@@ -134,6 +134,19 @@ the buyer. Stock goes down automatically when an order is paid.
 
 Test it the same way as donations (test key + `stripe listen`).
 
+## Customer accounts (optional)
+
+Visitors can create an account at `/account/register` to see their order and
+donation history, keep a wishlist, and save a shipping address that Stripe
+pre-fills at checkout. Accounts are entirely optional: guest checkout and
+guest donations work exactly the same without one.
+
+Earlier guest orders and donations made with the same email are attached to
+the account only after the customer confirms their email via the emailed
+link, so nobody can claim someone else's history by registering their
+address. Confirmation and reset emails need SMTP configured; without it they
+are logged, not sent. Admins can look up accounts under `/admin/customers`.
+
 ## Environment variables
 
 All optional; sensible local defaults apply if unset.

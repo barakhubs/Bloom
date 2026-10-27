@@ -1,6 +1,7 @@
 <?php
 /** @var array $product */
 /** @var string $csrfToken */
+/** @var int[] $wishlistIds */
 /** @var string|null $notice */
 
 use App\Core\Cart;
@@ -27,7 +28,10 @@ $maxQty = min($stock, Cart::MAX_QTY);
                 <?php endif; ?>
             </div>
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.3s">
-                <h2 class="display-6 mb-2"><?= htmlspecialchars($product['name']) ?></h2>
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <h2 class="display-6 mb-2"><?= htmlspecialchars($product['name']) ?></h2>
+                    <?php $wishlistReturnTo = '/shop/' . $product['slug']; $wishlistClass = 'flex-shrink-0'; require __DIR__ . '/_wishlist-button.php'; ?>
+                </div>
                 <p class="h3 text-primary mb-4"><?= htmlspecialchars(Money::format((int) $product['price_cents'])) ?></p>
                 <?php if (!empty($product['summary'])): ?>
                     <p class="fs-5"><?= htmlspecialchars($product['summary']) ?></p>

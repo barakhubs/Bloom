@@ -5,6 +5,8 @@
 /** @var bool|null $noindex */
 
 use App\Core\Cart;
+use App\Core\Csrf;
+use App\Core\CustomerAuth;
 use App\Core\Shop;
 use App\Models\Setting;
 
@@ -38,6 +40,7 @@ if ($shopEnabled) {
     $navLinks = array_slice($navLinks, 0, -1, true) + ['/shop' => 'Shop'] + array_slice($navLinks, -1, null, true);
 }
 $cartCount = $shopEnabled ? Cart::count() : 0;
+$currentCustomer = CustomerAuth::user();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -156,13 +159,37 @@ $cartCount = $shopEnabled ? Cart::count() : 0;
                             <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                         <?php endforeach; ?>
                     </div>
+                    <div class="dropdown ms-auto me-3">
+                        <?php if ($currentCustomer !== null): ?>
+                            <a href="/account" class="nav-link text-white dropdown-toggle" id="accountMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user me-1"></i><?= htmlspecialchars(strtok($currentCustomer['name'], ' ') ?: 'Account') ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountMenu">
+                                <li><a class="dropdown-item" href="/account">My Account</a></li>
+                                <?php if ($shopEnabled): ?>
+                                    <li><a class="dropdown-item" href="/account/orders">Orders</a></li>
+                                    <li><a class="dropdown-item" href="/account/wishlist">Wishlist</a></li>
+                                <?php endif; ?>
+                                <li><a class="dropdown-item" href="/account/donations">Donations</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="/account/logout" method="post" class="m-0">
+                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(Csrf::token()) ?>">
+                                        <button type="submit" class="dropdown-item">Sign Out</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        <?php else: ?>
+                            <a href="/account/login" class="nav-link text-white"><i class="fa fa-user me-1"></i>Sign In</a>
+                        <?php endif; ?>
+                    </div>
                     <?php if ($shopEnabled): ?>
-                        <a href="/cart" class="nav-link text-white ms-auto me-3 position-relative" aria-label="Cart (<?= $cartCount ?> items)">
+                        <a href="/cart" class="nav-link text-white me-3 position-relative" aria-label="Cart (<?= $cartCount ?> items)">
                             <i class="fa fa-cart-shopping fa-lg"></i>
                             <?php if ($cartCount > 0): ?><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary"><?= $cartCount ?></span><?php endif; ?>
                         </a>
                     <?php endif; ?>
-                    <a href="/donate" class="btn btn-secondary py-2 px-4<?= $shopEnabled ? '' : ' ms-auto' ?>">Donate</a>
+                    <a href="/donate" class="btn btn-secondary py-2 px-4">Donate</a>
                 </div>
             </nav>
         </div>
@@ -181,8 +208,9 @@ $cartCount = $shopEnabled ? Cart::count() : 0;
                     <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                 <?php endforeach; ?>
             </div>
+            <a href="/account" class="btn btn-outline-light mt-4 py-3"><i class="fa fa-user me-2"></i><?= $currentCustomer !== null ? 'My Account' : 'Sign In' ?></a>
             <?php if ($shopEnabled): ?>
-                <a href="/cart" class="btn btn-outline-light mt-4 py-3"><i class="fa fa-cart-shopping me-2"></i>Cart<?= $cartCount > 0 ? ' (' . $cartCount . ')' : '' ?></a>
+                <a href="/cart" class="btn btn-outline-light mt-3 py-3"><i class="fa fa-cart-shopping me-2"></i>Cart<?= $cartCount > 0 ? ' (' . $cartCount . ')' : '' ?></a>
             <?php endif; ?>
             <a href="/donate" class="btn btn-primary mt-3 py-3">Donate</a>
         </div>

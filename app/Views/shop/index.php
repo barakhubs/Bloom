@@ -1,6 +1,7 @@
 <?php
 /** @var array $products */
 /** @var string $csrfToken */
+/** @var int[] $wishlistIds */
 /** @var string|null $notice */
 
 use App\Core\Money;
@@ -27,7 +28,8 @@ require dirname(__DIR__) . '/partials/page-header.php';
                 <?php foreach ($products as $i => $product): ?>
                     <?php $inStock = (int) $product['stock'] > 0; ?>
                     <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="<?= number_format(0.1 + 0.2 * ($i % 3), 1) ?>s">
-                        <div class="donation-item h-100 p-4">
+                        <div class="donation-item h-100 p-4 position-relative">
+                            <?php $wishlistReturnTo = '/shop'; $wishlistClass = 'position-absolute top-0 start-0 m-4'; require __DIR__ . '/_wishlist-button.php'; ?>
                             <a href="/shop/<?= htmlspecialchars($product['slug']) ?>" class="position-relative mb-4 d-block">
                                 <?php if (!empty($product['image_path'])): ?>
                                     <img class="img-fluid w-100" style="height:260px;object-fit:cover;" src="/<?= htmlspecialchars(ltrim($product['image_path'], '/')) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
