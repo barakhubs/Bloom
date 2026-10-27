@@ -83,6 +83,42 @@ password/encryption/from address). Until SMTP is configured there, the app
 still works normally — form submissions save to the database, but no
 notification email is sent (this is logged, not a failure).
 
+## Online donations (Stripe)
+
+Donations go through hosted [Stripe Checkout](https://docs.stripe.com/payments/checkout):
+the visitor picks an amount on `/donate` (a general gift of any amount) or
+`/donate/{scheme}` (a campaign created in `/admin/donation-schemes`), is sent
+to Stripe's payment page, and comes back to a thank-you page. Card details
+never touch this server.
+
+A donation is recorded as `pending` when checkout starts and is only marked
+`paid` by Stripe's signed webhook (`POST /stripe/webhook`), which also sends
+the donor's receipt email. Until a secret key is saved in `/admin/settings`,
+the Donate page shows a "contact us to donate" message instead of the form.
+
+**Local testing**
+
+1. In the Stripe dashboard (test mode), copy the secret key (`sk_test_…`)
+   into Admin → Settings → Payments.
+2. Install the [Stripe CLI](https://docs.stripe.com/stripe-cli) and forward
+   events to the dev server:
+
+   ```
+   stripe listen --forward-to localhost:8000/stripe/webhook
+   ```
+
+   Paste the `whsec_…` secret it prints into Admin → Settings → Payments.
+3. Donate on `/donate` with test card `4242 4242 4242 4242` (any future
+   expiry, any CVC). The donation shows as Paid in `/admin/donations`.
+
+**Production:** use live keys, set `APP_URL` to the public HTTPS URL (it's
+used for the Stripe success/cancel redirects), and in the Stripe dashboard
+add a webhook endpoint at `https://<your-domain>/stripe/webhook` for the
+events `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+`checkout.session.async_payment_failed` and `checkout.session.expired`, then
+save its signing secret in settings. Refunds are issued from the Stripe
+dashboard.
+
 ## Environment variables
 
 All optional; sensible local defaults apply if unset.
@@ -91,7 +127,7 @@ All optional; sensible local defaults apply if unset.
 |---|---|---|
 | `APP_ENV` | `local` or `production` | `local` |
 | `APP_DEBUG` | Force error display on/off, overriding the `APP_ENV`-based default | debug on unless `APP_ENV=production` |
-| `APP_URL` | Base URL, currently informational only | `http://localhost:8000` |
+| `APP_URL` | Public base URL, used for emailed links and Stripe redirect URLs — must be set in production | `http://localhost:8000` |
 | `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Database connection | `127.0.0.1`, `3306`, `bloom`, `root`, *(empty)* |
 
 **Production checklist:** set `APP_ENV=production` (this alone turns off
@@ -126,7 +162,14 @@ tools/             # one-off maintenance scripts (see file headers), not part
 - All SQL goes through PDO prepared statements — no raw string interpolation
   anywhere in the codebase.
 - Every state-changing form (public and admin) is protected by a session-bound
-  CSRF token, checked on every POST.
+  CSRF token, checked on every POST. The one exception is the Stripe webhook
+  (`POST /stripe/webhook`), which Stripe calls server-to-server; it is
+  authenticated by verifying the `Stripe-Signature` header instead and
+  rejects anything unsigned.
+- Payment amounts are always validated and priced server-side; payment
+  status only changes via the signed webhook, never from the browser
+  redirect, and webhook handling is idempotent (replayed events don't send
+  duplicate receipts).
 - The public contact form and blog comment form each include a honeypot field,
   invisible to real users, to catch simple spam bots without a CAPTCHA.
 - Blog comments are moderated: a submitted comment is never publicly visible

@@ -13,7 +13,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
         <h2 class="display-6 mb-4">Making the World a Better Place For All of Us</h2>
         <p class="fs-5 mb-4 mx-auto" style="max-width: 700px;">Bloom Beyond Borders supports vulnerable children and women in Uganda while empowering African immigrant families in the US, breaking cycles of poverty and building resilient communities through comprehensive, data-driven programs.</p>
         <div class="d-flex justify-content-center">
-            <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Make a Donation</a>
+            <a class="btn btn-primary py-3 px-4 me-3" href="/donate">Make a Donation</a>
             <a class="btn btn-secondary py-3 px-4" href="/contact">Join the Movement</a>
         </div>
     </div>

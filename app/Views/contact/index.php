@@ -100,7 +100,8 @@ require dirname(__DIR__) . '/partials/page-header.php';
             </div>
             <div class="col-lg-5 donate-form bg-primary py-5 text-center wow fadeIn" data-wow-delay="0.5s">
                 <div class="h-100 p-5 d-flex flex-column justify-content-center">
-                    <p class="fs-5 text-dark mb-4">Use the form above to let us know how you'd like to help.</p>
+                    <p class="fs-5 text-dark mb-4">Give securely online, or use the form above to let us know how you'd like to help.</p>
+                    <a href="/donate" class="btn btn-secondary py-3 w-100">Donate Now</a>
                 </div>
             </div>
         </div>

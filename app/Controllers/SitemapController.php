@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\BlogPost;
+use App\Models\DonationScheme;
 
 class SitemapController extends Controller
 {
@@ -21,7 +22,12 @@ class SitemapController extends Controller
             '/gallery',
             '/blog',
             '/contact',
+            '/donate',
         ];
+
+        foreach ((new DonationScheme())->active() as $scheme) {
+            $staticPaths[] = '/donate/' . $scheme['slug'];
+        }
 
         $posts = (new BlogPost())->publishedList();
 

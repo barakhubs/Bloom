@@ -18,6 +18,7 @@ class Permissions
         'comments' => 'Comment Moderation',
         'story' => 'Our Story',
         'contact' => 'Contact Submissions',
+        'donations' => 'Donations',
         'users' => 'Users & Roles',
     ];
 }

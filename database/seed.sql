@@ -42,7 +42,9 @@ INSERT INTO settings (`key`, `value`) VALUES
     ('smtp_password', ''),
     ('smtp_encryption', 'tls'),
     ('smtp_from_email', 'no-reply@bloombeyondborders.org'),
-    ('smtp_from_name', 'Bloom Beyond Borders');
+    ('smtp_from_name', 'Bloom Beyond Borders'),
+    ('stripe_secret_key', ''),
+    ('stripe_webhook_secret', '');
 
 -- --------------------------------------------------
 -- team_members — Board of Directors, from the live "Our Team" page
@@ -135,3 +137,22 @@ INSERT INTO blog_posts (title, slug, body, featured_image_path, status, publishe
     ('Financial literacy', 'financial-literacy',
      'Understanding savings, budgeting, and credit to build long-term economic security for families. Financial literacy is a foundational skill that helps women and families plan for a more stable future.',
      'img/craft4.jpg', 'published', '2026-04-12 09:00:00');
+
+-- --------------------------------------------------
+-- donation_schemes — placeholder campaigns, editable in Admin -> Donation Schemes
+-- --------------------------------------------------
+INSERT INTO donation_schemes (name, slug, summary, description, preset_amounts, allow_custom_amount, goal_cents, is_active, sort_order) VALUES
+    ('School Fees for a Child', 'school-fees-for-a-child',
+     'Keep a child in the classroom for a full school year.',
+     'Your gift covers tuition, uniforms, and learning materials for a child in Uganda whose family cannot afford them.
+
+Every child we support is followed up through the year so they stay in school.',
+     '2500,5000,10000,25000', 1, 1000000, 1, 1),
+    ('Early Childhood Centre', 'early-childhood-centre',
+     'Give young children a safe, joyful start to learning.',
+     'Supports our early childhood education programme: trained caregivers, play-based learning materials, and nutritious meals for children under six.',
+     '2000,5000,10000', 1, 500000, 1, 2),
+    ('Immigrant Family Support', 'immigrant-family-support',
+     'Help African immigrant families settle and thrive in the US.',
+     'Funds culturally responsive integration support: navigating schools, healthcare, and community services, and connecting families to local networks.',
+     '2500,5000,10000', 1, NULL, 1, 3);
