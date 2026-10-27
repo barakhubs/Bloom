@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Core\Mailer;
 use App\Core\Stripe;
 use App\Models\Donation;
+use App\Models\Order;
+use App\Models\Product;
 use Stripe\Checkout\Session;
 use Stripe\Exception\SignatureVerificationException;
 
@@ -37,6 +39,7 @@ class StripeWebhookController
         if ($object instanceof Session) {
             match ($object->metadata['type'] ?? null) {
                 'donation' => $this->handleDonation($event->type, $object),
+                'order' => $this->handleOrder($event->type, $object),
                 default => null,
             };
         }
@@ -57,7 +60,7 @@ class StripeWebhookController
 
                 $paid = $donations->markPaidBySession(
                     $session->id,
-                    is_string($session->payment_intent) ? $session->payment_intent : ($session->payment_intent->id ?? null),
+                    $this->paymentIntentId($session),
                     $session->customer_details->name ?? null,
                     $session->customer_details->email ?? null
                 );
@@ -77,6 +80,68 @@ class StripeWebhookController
                 $donations->markStatusBySession($session->id, 'expired');
                 break;
         }
+    }
+
+    private function handleOrder(string $eventType, Session $session): void
+    {
+        $orders = new Order();
+
+        switch ($eventType) {
+            case 'checkout.session.completed':
+            case 'checkout.session.async_payment_succeeded':
+                if ($session->payment_status !== 'paid') {
+                    return;
+                }
+
+                $customer = $session->customer_details;
+                // Current API versions put the address under collected_information; older ones had shipping_details.
+                $shipping = $session->collected_information->shipping_details ?? $session->shipping_details ?? null;
+                $address = $shipping->address ?? null;
+
+                $paid = $orders->markPaidBySession($session->id, $this->paymentIntentId($session), [
+                    'name' => $customer->name ?? null,
+                    'email' => $customer->email ?? null,
+                    'phone' => $customer->phone ?? null,
+                    'ship_name' => $shipping->name ?? null,
+                    'line1' => $address->line1 ?? null,
+                    'line2' => $address->line2 ?? null,
+                    'city' => $address->city ?? null,
+                    'state' => $address->state ?? null,
+                    'postal_code' => $address->postal_code ?? null,
+                    'country' => $address->country ?? null,
+                ]);
+
+                if (!$paid) {
+                    return; // already processed (retry/replay) or unknown session
+                }
+
+                $order = $orders->findBySession($session->id);
+
+                if ((int) $session->amount_total !== (int) $order['total_cents']) {
+                    error_log("Stripe webhook: order {$order['reference']} paid {$session->amount_total} but total is {$order['total_cents']}");
+                }
+
+                $products = new Product();
+                $soldOut = [];
+                foreach ($order['items'] as $item) {
+                    if ($item['product_id'] !== null && $products->decrementStock((int) $item['product_id'], (int) $item['quantity']) === 0) {
+                        $soldOut[] = $item['product_name'];
+                    }
+                }
+
+                Mailer::sendOrderConfirmation($order);
+                Mailer::sendOrderNotification($order, $soldOut);
+                break;
+
+            case 'checkout.session.expired':
+                $orders->markExpiredBySession($session->id);
+                break;
+        }
+    }
+
+    private function paymentIntentId(Session $session): ?string
+    {
+        return is_string($session->payment_intent) ? $session->payment_intent : ($session->payment_intent->id ?? null);
     }
 
     private function respond(int $status, string $message): never

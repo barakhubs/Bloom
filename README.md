@@ -119,6 +119,21 @@ events `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
 save its signing secret in settings. Refunds are issued from the Stripe
 dashboard.
 
+## Shop
+
+The shop is off by default. Add products in `/admin/products`, set the flat
+shipping charge and ship-to countries under Admin → Settings → Shop, then
+switch the shop on there; the Shop link and cart icon then appear in the
+navigation.
+
+Shoppers don't need an account: they add items to a session cart, check out
+on Stripe's hosted page (which collects their email, phone and shipping
+address), and are emailed their order details once the webhook confirms
+payment. Paid orders appear under `/admin/orders`; **Mark as Shipped** emails
+the buyer. Stock goes down automatically when an order is paid.
+
+Test it the same way as donations (test key + `stripe listen`).
+
 ## Environment variables
 
 All optional; sensible local defaults apply if unset.

@@ -7,7 +7,7 @@ Bloom Beyond Borders is a nonprofit supporting vulnerable children and women in 
 This project rebuilds it as a **vanilla PHP MVC** backend + **vanilla HTML/CSS/JS** frontend, using the free Bootstrap 5 template already in this folder ("Charitize" by HTML Codex) as the visual base — restyled to the org's brand colors and re-pointed at the real site's page set instead of the template's generic charity pages.
 
 **Non-goals (explicitly out of scope):**
-- ~~No shop/cart/e-commerce, no payment gateway integration.~~ Reversed by client request (2026-10-27): Stripe-powered donations (`feature/stripe-donations`), with a guest-checkout shop and optional customer accounts to follow. See **Payments (Stripe)** below.
+- ~~No shop/cart/e-commerce, no payment gateway integration.~~ Reversed by client request (2026-10-27): Stripe-powered donations (`feature/stripe-donations`) and a guest-checkout shop (`feature/shop-cart-orders`), with optional customer accounts to follow. See **Payments (Stripe)** below.
 - No npm / JS build step / bundler — frontend stays static vanilla JS + the template's existing jQuery-plugin vendor libs.
 - No newsletter signup feature.
 - No multi-language (EN/FR) toggle — English only for v1.
@@ -47,6 +47,7 @@ Old template colors → new brand colors:
 | Partners | `/partners` | new page, styled from the footer/donation-card patterns — partner logos + "Become a Sponsor" CTA into Contact |
 | Gallery | `/gallery` | new page, extends the footer gallery grid — organized into **categorized albums** |
 | Blog | `/blog`, `/blog/{slug}` | new — no equivalent in the template; list view (cards) + single-post view with comment form + approved comments list |
+| Shop | `/shop`, `/shop/{slug}`, `/cart`, `/checkout/success` | `.donation-item` cards for products; session cart; guest checkout on Stripe's hosted page (email, phone, shipping address collected there). Hidden (404 + no nav link) until **Settings → Shop** is switched on |
 | Contact | `/contact` | `contact.html` — form (name, email, subject, message) + honeypot, org phone/email/address, social links |
 | Donate | `/donate`, `/donate/{slug}`, `/donate/thank-you` | the template's `.donate` split-panel + `.donation-item` cards — general "any amount" form + active donation-scheme cards (progress bar when a goal is set); all Donate buttons/CTAs and a nav button link here |
 
@@ -57,7 +58,7 @@ Old template colors → new brand colors:
 Multiple back-office users with role-based permissions (client feedback, `feature/admin-users-rbac`). Login at `/admin/login`, session-based.
 
 **Users & permissions:**
-- Permissions are a fixed list in code, one per section: `App\Core\Permissions::ALL` (`settings`, `team`, `partners`, `gallery`, `blog`, `comments`, `story`, `contact`, `donations`, `users`). Dashboard and My Account are open to every logged-in user.
+- Permissions are a fixed list in code, one per section: `App\Core\Permissions::ALL` (`settings`, `team`, `partners`, `gallery`, `blog`, `comments`, `story`, `contact`, `donations`, `shop`, `orders`, `users`). Dashboard and My Account are open to every logged-in user.
 - **Roles** (`/admin/roles`) — admins create custom roles and tick which sections each one can manage. The built-in **Super Admin** role (`roles.is_system = 1`) implicitly has everything and can't be edited or deleted. A role can't be deleted while users are assigned to it.
 - **Users** (`/admin/users`) — admin enters name + email + role, and the user gets a single-use **invite link** (72h) by email to set their own password. Admins can resend invites, send password-reset links (2h), and enable/disable or delete users. If SMTP isn't configured, the link is shown to the admin to copy and send themselves.
 - Guards: you can't delete or disable yourself or change your own role; the last active Super Admin can't be removed or demoted; only a Super Admin can grant the Super Admin role or edit/delete a Super Admin.
@@ -72,6 +73,7 @@ Multiple back-office users with role-based permissions (client feedback, `featur
 - **Gallery** — CRUD for albums, and CRUD for images within an album (caption, album assignment).
 - **Blog** — CRUD for posts (title, slug, body, featured image, published/draft, date); comment moderation queue (approve/reject, flat list per post).
 - **Contact submissions** — inbox/list of submitted contact-form messages.
+- **Shop** — Products (`shop` permission: name, slug, summary, description, price, image, stock, active, sort order) and Orders (`orders` permission: filter by status, detail with items + ship-to address, **Mark shipped** → emails the buyer, **Cancel** with optional restock after refunding in Stripe). Shop on/off, flat shipping rate, and ship-to countries live in Site Settings.
 - **Donations** (`donations` permission) — Donation Schemes CRUD (name, slug, summary, description, image, suggested amounts, allow-custom-amount, optional goal, active, sort order) and a read-only donations ledger (filter by status/scheme, totals, link to the Stripe payment). Refunds happen in the Stripe dashboard.
 - **Our Story content blocks** — editable fields for: impact-stats counters (label + number, repeatable), financial-allocation chart data (year + category + percentage, repeatable), board letter (author name/title + body text). Seed these with the current live-site placeholder text as starting content.
 
@@ -117,12 +119,16 @@ Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both ve
 - Our Story content, split into three focused tables (settled from the "or split" option): `story_stats` (id, label, value, sort_order), `story_finance_entries` (id, year, category, percentage, sort_order), `story_board_letter` (id fixed to 1 via CHECK constraint, author_name, author_title, body, updated_at)
 - `donation_schemes` (id, name, slug unique, summary, description, image_path, preset_amounts = CSV of cents, allow_custom_amount, goal_cents nullable, is_active, sort_order, created_at)
 - `donations` (id, scheme_id FK → donation_schemes ON DELETE SET NULL, amount_cents, currency, donor_name, donor_email, message, status[pending/paid/expired/failed], stripe_session_id unique, stripe_payment_intent_id, created_at, paid_at). Existing DBs: apply `database/migrations/2026-10-27_donations.sql`
+- `products` (id, name, slug unique, summary, description, price_cents, image_path, stock, is_active, sort_order, created_at)
+- `orders` (id, reference unique e.g. `BBB-7K3Q9X`, customer_name/email/phone, ship_name/line1/line2/city/state/postal_code/country, subtotal_cents, shipping_cents, total_cents, currency, status[pending/paid/shipped/cancelled/expired], stripe_session_id unique, stripe_payment_intent_id, created_at, paid_at, shipped_at)
+- `order_items` (id, order_id FK → orders ON DELETE CASCADE, product_id FK → products ON DELETE SET NULL, product_name + unit_price_cents snapshots, quantity). Existing DBs: apply `database/migrations/2026-10-27_shop.sql`
 
 ## Payments (Stripe)
 
 - Hosted **Stripe Checkout** redirect (`App\Core\Stripe` wraps the SDK); keys live in `settings` (`stripe_secret_key`, `stripe_webhook_secret`), entered in Site Settings and never re-displayed. No keys = the Donate page falls back to "contact us".
 - Money is integer **cents**, USD (`App\Core\Money`). Amounts are validated and priced server-side ($1–$50,000; presets must match the scheme; custom amounts only if the scheme allows them) and sent to Stripe as `price_data`. Nothing price-related is trusted from the client.
-- Rows are created `pending` before redirecting to Stripe. **Only the signed webhook** (`POST /stripe/webhook` → `StripeWebhookController`) marks them `paid`/`failed`/`expired`; the thank-you page is display-only. Handlers are idempotent (`UPDATE … WHERE status = 'pending'`, side effects only when `rowCount() === 1`), so Stripe retries/replays don't double-send receipts. The session's `metadata[type]` routes the event (`donation` now; `order` with the shop).
+- Rows are created `pending` before redirecting to Stripe. **Only the signed webhook** (`POST /stripe/webhook` → `StripeWebhookController`) marks them `paid`/`failed`/`expired`; the thank-you page is display-only. Handlers are idempotent (`UPDATE … WHERE status = 'pending'`, side effects only when `rowCount() === 1`), so Stripe retries/replays don't double-send receipts. The session's `metadata[type]` routes the event (`donation` / `order`).
+- **Shop:** the cart (`App\Core\Cart`) stores only product id → qty in the session; `Cart::resolve()` re-reads live prices/stock and caps quantities. Checkout re-validates, writes a pending order with snapshot line items, then opens a 30-minute Checkout Session (flat-rate `shipping_options`, `shipping_address_collection`, phone collection). The cancel URL expires that session immediately. When an order is paid, the webhook stores the address (from `collected_information.shipping_details`), decrements stock (floored at 0; oversell between checkout and payment is possible and is flagged in the admin email), and emails the order confirmation to the buyer and a notification to the org.
 
 ## Forms & spam handling
 
@@ -173,7 +179,7 @@ One feature branch per row, in order — each builds on the ones above it and sh
 | 18 | `feature/admin-contact-story-crud` | Contact submissions inbox, Our Story content-block CRUD | Editing a stat/finance/letter block updates `/our-story` |
 | 19 | `polish/security-hardening-docs` | CSRF coverage audit, upload validation audit, prepared-statement audit, `README.md` setup/run instructions | Manual pass through the security notes checklist above |
 | 20 | `feature/stripe-donations` | stripe-php, Stripe settings, donation schemes + general donations via Stripe Checkout, signed idempotent webhook, receipt emails, admin schemes CRUD + donations ledger | Test-mode donation with `stripe listen` → row `paid`, receipt sent; replayed event sends nothing new |
-| 21 | `feature/shop-cart-orders` | Products, session cart, guest checkout via Stripe Checkout (shipping address, flat-rate shipping), order emails, admin products + orders (mark shipped) | Test-mode order → `paid`, stock decremented, confirmation email |
+| 21 | `feature/shop-cart-orders` | Products, session cart, guest checkout via Stripe Checkout (shipping address, flat-rate shipping), order emails, admin products + orders (mark shipped / cancel), shop on/off + shipping settings | Test-mode order → `paid`, stock decremented, confirmation email |
 | 22 | `feature/customer-accounts` | Optional customer sign-up/sign-in/reset, order + donation history, wishlist, profile + saved address; guest history linked only after email verification | See plan verification list |
 
 Branches 1–4 are foundation (not independently useful to an end user); 5–12 build out the full public site; 13–18 build out the back office; 19 closes out with a security/docs pass.

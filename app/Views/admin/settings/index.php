@@ -140,6 +140,30 @@ $val = fn (string $key) => htmlspecialchars($settings[$key] ?? '');
     </div>
 
     <div class="bg-white p-4 mb-4 shadow-sm">
+        <h5 class="mb-3">Shop</h5>
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" name="shop_enabled" id="shop_enabled" value="1"<?= ($settings['shop_enabled'] ?? '0') === '1' ? ' checked' : '' ?>>
+                    <label class="form-check-label" for="shop_enabled">Show the shop on the public site (Shop page, cart, and checkout)</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Flat Shipping per Order (USD)</label>
+                <input type="text" inputmode="decimal" class="form-control<?= isset($errors['shop_shipping']) ? ' is-invalid' : '' ?>" name="shop_shipping" value="<?= htmlspecialchars(\App\Core\Money::toInput((int) ($settings['shop_shipping_flat_cents'] ?? 0))) ?>">
+                <?php if (isset($errors['shop_shipping'])): ?><div class="invalid-feedback"><?= htmlspecialchars($errors['shop_shipping']) ?></div><?php endif; ?>
+                <div class="form-text">0 for free shipping.</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Ship to Countries</label>
+                <input type="text" class="form-control<?= isset($errors['shop_ship_countries']) ? ' is-invalid' : '' ?>" name="shop_ship_countries" value="<?= $val('shop_ship_countries') ?>" placeholder="US, UG">
+                <?php if (isset($errors['shop_ship_countries'])): ?><div class="invalid-feedback"><?= htmlspecialchars($errors['shop_ship_countries']) ?></div><?php endif; ?>
+                <div class="form-text">Two-letter country codes, comma-separated.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-4 mb-4 shadow-sm">
         <h5 class="mb-3">Logos</h5>
         <div class="row g-4">
             <div class="col-md-4">

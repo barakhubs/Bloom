@@ -44,7 +44,10 @@ INSERT INTO settings (`key`, `value`) VALUES
     ('smtp_from_email', 'no-reply@bloombeyondborders.org'),
     ('smtp_from_name', 'Bloom Beyond Borders'),
     ('stripe_secret_key', ''),
-    ('stripe_webhook_secret', '');
+    ('stripe_webhook_secret', ''),
+    ('shop_enabled', '0'),
+    ('shop_shipping_flat_cents', '1000'),
+    ('shop_ship_countries', 'US,UG');
 
 -- --------------------------------------------------
 -- team_members — Board of Directors, from the live "Our Team" page
@@ -156,3 +159,16 @@ Every child we support is followed up through the year so they stay in school.',
      'Help African immigrant families settle and thrive in the US.',
      'Funds culturally responsive integration support: navigating schools, healthcare, and community services, and connecting families to local networks.',
      '2500,5000,10000', 1, NULL, 1, 3);
+
+-- --------------------------------------------------
+-- products — placeholder items; the shop stays hidden until enabled in Settings
+-- --------------------------------------------------
+INSERT INTO products (name, slug, summary, description, price_cents, image_path, stock, is_active, sort_order) VALUES
+    ('Handwoven Basket', 'handwoven-basket',
+     'Made by women artisans in our Uganda skills programme.',
+     'Each basket is handwoven from natural fibres by women in our vocational training programme. Every purchase supports their income and the programme itself.',
+     3500, 'img/craft4.jpg', 20, 1, 1),
+    ('Bloom Beyond Borders Tote Bag', 'tote-bag',
+     'Sturdy cotton tote with the Bloom Beyond Borders logo.',
+     'A reusable cotton tote bag. Proceeds support education and family programmes.',
+     2000, NULL, 50, 1, 2);
