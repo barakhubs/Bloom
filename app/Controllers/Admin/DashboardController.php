@@ -12,6 +12,8 @@ class DashboardController extends AdminController
     private const TILES = [
         ['Pending Comments', 'comments', "SELECT COUNT(*) FROM blog_comments WHERE status = 'pending'", true, '/admin/comments'],
         ['Contact Submissions', 'contact', 'SELECT COUNT(*) FROM contact_submissions', false, '/admin/contact'],
+        ['Donations This Month', 'donations', "SELECT COUNT(*) FROM donations WHERE status = 'paid' AND paid_at >= DATE_FORMAT(NOW(), '%Y-%m-01')", false, '/admin/donations'],
+        ['Active Donation Schemes', 'donations', 'SELECT COUNT(*) FROM donation_schemes WHERE is_active = 1', false, '/admin/donation-schemes'],
         ['Team Members', 'team', 'SELECT COUNT(*) FROM team_members', false, '/admin/team'],
         ['Partners', 'partners', 'SELECT COUNT(*) FROM partners', false, '/admin/partners'],
         ['Gallery Albums', 'gallery', 'SELECT COUNT(*) FROM gallery_albums', false, '/admin/gallery'],

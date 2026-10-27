@@ -84,6 +84,69 @@ class Mailer
         }
     }
 
+    /** Thank-you / receipt to the donor once the webhook confirms payment. Same failure contract. */
+    public static function sendDonationReceipt(array $donation): bool
+    {
+        if (empty($donation['donor_email'])) {
+            return false;
+        }
+
+        $settings = Setting::all();
+        $siteName = $settings['smtp_from_name'] ?: 'Bloom Beyond Borders';
+        $name = $donation['donor_name'] ?: 'friend';
+        $towards = $donation['scheme_name'] ?? null;
+
+        $body = "Dear {$name},\n\n"
+            . 'Thank you for your donation of ' . Money::format((int) $donation['amount_cents'])
+            . ($towards ? " towards \"{$towards}\"" : '') . " to {$siteName}.\n\n"
+            . "Your generosity directly supports vulnerable children and women in Uganda and immigrant families in the US.\n\n"
+            . 'Donation reference: D-' . (int) $donation['id'] . "\n"
+            . 'Date: ' . date('j F Y', strtotime((string) ($donation['paid_at'] ?? 'now'))) . "\n\n"
+            . "With gratitude,\n{$siteName}\n";
+
+        return self::sendTo($settings, (string) $donation['donor_email'], $donation['donor_name'] ?: '', "Thank you for your donation to {$siteName}", $body, 'donation receipt');
+    }
+
+    /** Short heads-up to the org's contact email about a new paid donation. */
+    public static function sendDonationNotification(array $donation): bool
+    {
+        $settings = Setting::all();
+        $amount = Money::format((int) $donation['amount_cents']);
+        $towards = $donation['scheme_name'] ?? 'General donation';
+
+        $body = "A new donation has been received.\n\n"
+            . "Amount: {$amount}\n"
+            . "Towards: {$towards}\n"
+            . 'From: ' . ($donation['donor_name'] ?: '(no name)') . ' <' . ($donation['donor_email'] ?: 'no email') . ">\n"
+            . (!empty($donation['message']) ? "\nMessage:\n{$donation['message']}\n" : '');
+
+        return self::sendTo($settings, (string) ($settings['contact_email'] ?? ''), '', "New donation: {$amount} ({$towards})", $body, 'donation notification');
+    }
+
+    /** Plain-text email to one recipient; false + log on any failure (never throws). */
+    private static function sendTo(array $settings, string $to, string $toName, string $subject, string $body, string $context): bool
+    {
+        $mail = self::make($settings, $context);
+
+        if ($mail === null) {
+            return false;
+        }
+
+        try {
+            $mail->addAddress($to !== '' ? $to : $mail->From, $toName);
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+
+            $mail->send();
+
+            return true;
+        } catch (PHPMailerException $e) {
+            error_log("Mailer: failed to send {$context} - " . $mail->ErrorInfo);
+
+            return false;
+        }
+    }
+
     /** A PHPMailer configured from the SMTP settings, or null (logged) if SMTP isn't set up. */
     private static function make(array $settings, string $context): ?PHPMailer
     {

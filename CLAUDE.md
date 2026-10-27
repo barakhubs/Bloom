@@ -7,7 +7,7 @@ Bloom Beyond Borders is a nonprofit supporting vulnerable children and women in 
 This project rebuilds it as a **vanilla PHP MVC** backend + **vanilla HTML/CSS/JS** frontend, using the free Bootstrap 5 template already in this folder ("Charitize" by HTML Codex) as the visual base — restyled to the org's brand colors and re-pointed at the real site's page set instead of the template's generic charity pages.
 
 **Non-goals (explicitly out of scope):**
-- No shop/cart/e-commerce, no payment gateway integration.
+- ~~No shop/cart/e-commerce, no payment gateway integration.~~ Reversed by client request (2026-10-27): Stripe-powered donations (`feature/stripe-donations`), with a guest-checkout shop and optional customer accounts to follow. See **Payments (Stripe)** below.
 - No npm / JS build step / bundler — frontend stays static vanilla JS + the template's existing jQuery-plugin vendor libs.
 - No newsletter signup feature.
 - No multi-language (EN/FR) toggle — English only for v1.
@@ -16,7 +16,7 @@ This project rebuilds it as a **vanilla PHP MVC** backend + **vanilla HTML/CSS/J
 
 - **Backend:** PHP, hand-rolled MVC (no framework). Dev server: `php -S localhost:8000 -t public`.
 - **Database:** MySQL/MariaDB (local dev via XAMPP — database `bloom`, user `root`, empty password, matching the defaults in `app/Config/db.php`), accessed via PDO with prepared statements only (no raw string-interpolated SQL, anywhere).
-- **Dependencies:** Composer, scoped to **PHPMailer only** (SMTP sending for contact-form notifications and comment-moderation emails). No other Composer or npm packages.
+- **Dependencies:** Composer, scoped to **PHPMailer + stripe/stripe-php** (SMTP sending; Stripe Checkout + webhook verification). No other Composer or npm packages, and no Stripe.js; payments use the hosted Checkout redirect.
 - **Frontend:** the template's existing stack stays as-is for visuals — Bootstrap 5 (compiled CSS, no Sass toolchain available), jQuery + wow.js/waypoints/owl-carousel/counterup vendor libs (`lib/`). Any *new* interactive code (admin panel forms, honeypot handling, comment forms, image upload previews) is written in plain vanilla JS — no new jQuery usage, no new frontend libraries.
 - **Auth:** session-based admin auth, `password_hash()`/`password_verify()`, CSRF tokens on all state-changing admin forms.
 
@@ -48,7 +48,7 @@ Old template colors → new brand colors:
 | Gallery | `/gallery` | new page, extends the footer gallery grid — organized into **categorized albums** |
 | Blog | `/blog`, `/blog/{slug}` | new — no equivalent in the template; list view (cards) + single-post view with comment form + approved comments list |
 | Contact | `/contact` | `contact.html` — form (name, email, subject, message) + honeypot, org phone/email/address, social links |
-| Donate CTA | section on Home/Our Story/Contact, not its own page | informational only — suggested amounts as display, no payment processing, "Donate" buttons link to `/contact` |
+| Donate | `/donate`, `/donate/{slug}`, `/donate/thank-you` | the template's `.donate` split-panel + `.donation-item` cards — general "any amount" form + active donation-scheme cards (progress bar when a goal is set); all Donate buttons/CTAs and a nav button link here |
 
 404 page (`404.html`) is carried over as-is, restyled.
 
@@ -57,7 +57,7 @@ Old template colors → new brand colors:
 Multiple back-office users with role-based permissions (client feedback, `feature/admin-users-rbac`). Login at `/admin/login`, session-based.
 
 **Users & permissions:**
-- Permissions are a fixed list in code, one per section: `App\Core\Permissions::ALL` (`settings`, `team`, `partners`, `gallery`, `blog`, `comments`, `story`, `contact`, `users`). Dashboard and My Account are open to every logged-in user.
+- Permissions are a fixed list in code, one per section: `App\Core\Permissions::ALL` (`settings`, `team`, `partners`, `gallery`, `blog`, `comments`, `story`, `contact`, `donations`, `users`). Dashboard and My Account are open to every logged-in user.
 - **Roles** (`/admin/roles`) — admins create custom roles and tick which sections each one can manage. The built-in **Super Admin** role (`roles.is_system = 1`) implicitly has everything and can't be edited or deleted. A role can't be deleted while users are assigned to it.
 - **Users** (`/admin/users`) — admin enters name + email + role, and the user gets a single-use **invite link** (72h) by email to set their own password. Admins can resend invites, send password-reset links (2h), and enable/disable or delete users. If SMTP isn't configured, the link is shown to the admin to copy and send themselves.
 - Guards: you can't delete or disable yourself or change your own role; the last active Super Admin can't be removed or demoted; only a Super Admin can grant the Super Admin role or edit/delete a Super Admin.
@@ -72,6 +72,7 @@ Multiple back-office users with role-based permissions (client feedback, `featur
 - **Gallery** — CRUD for albums, and CRUD for images within an album (caption, album assignment).
 - **Blog** — CRUD for posts (title, slug, body, featured image, published/draft, date); comment moderation queue (approve/reject, flat list per post).
 - **Contact submissions** — inbox/list of submitted contact-form messages.
+- **Donations** (`donations` permission) — Donation Schemes CRUD (name, slug, summary, description, image, suggested amounts, allow-custom-amount, optional goal, active, sort order) and a read-only donations ledger (filter by status/scheme, totals, link to the Stripe payment). Refunds happen in the Stripe dashboard.
 - **Our Story content blocks** — editable fields for: impact-stats counters (label + number, repeatable), financial-allocation chart data (year + category + percentage, repeatable), board letter (author name/title + body text). Seed these with the current live-site placeholder text as starting content.
 
 ## MVC architecture
@@ -114,6 +115,14 @@ Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both ve
 - `blog_comments` (id, post_id FK → blog_posts, ON DELETE CASCADE, author_name, author_email, body, status[pending/approved], created_at — honeypot flag not persisted, rejected silently before insert)
 - `contact_submissions` (id, name, email, subject, message, created_at)
 - Our Story content, split into three focused tables (settled from the "or split" option): `story_stats` (id, label, value, sort_order), `story_finance_entries` (id, year, category, percentage, sort_order), `story_board_letter` (id fixed to 1 via CHECK constraint, author_name, author_title, body, updated_at)
+- `donation_schemes` (id, name, slug unique, summary, description, image_path, preset_amounts = CSV of cents, allow_custom_amount, goal_cents nullable, is_active, sort_order, created_at)
+- `donations` (id, scheme_id FK → donation_schemes ON DELETE SET NULL, amount_cents, currency, donor_name, donor_email, message, status[pending/paid/expired/failed], stripe_session_id unique, stripe_payment_intent_id, created_at, paid_at). Existing DBs: apply `database/migrations/2026-10-27_donations.sql`
+
+## Payments (Stripe)
+
+- Hosted **Stripe Checkout** redirect (`App\Core\Stripe` wraps the SDK); keys live in `settings` (`stripe_secret_key`, `stripe_webhook_secret`), entered in Site Settings and never re-displayed. No keys = the Donate page falls back to "contact us".
+- Money is integer **cents**, USD (`App\Core\Money`). Amounts are validated and priced server-side ($1–$50,000; presets must match the scheme; custom amounts only if the scheme allows them) and sent to Stripe as `price_data`. Nothing price-related is trusted from the client.
+- Rows are created `pending` before redirecting to Stripe. **Only the signed webhook** (`POST /stripe/webhook` → `StripeWebhookController`) marks them `paid`/`failed`/`expired`; the thank-you page is display-only. Handlers are idempotent (`UPDATE … WHERE status = 'pending'`, side effects only when `rowCount() === 1`), so Stripe retries/replays don't double-send receipts. The session's `metadata[type]` routes the event (`donation` now; `order` with the shop).
 
 ## Forms & spam handling
 
@@ -129,7 +138,7 @@ Verified in `polish/security-hardening-docs` via a systematic audit (not just wr
 - RBAC: permission checked server-side in `AdminController`'s constructor (403 for GET and POST alike), not just hidden in the nav. `Auth::user()` re-reads the user + role permissions from the DB on every request, so role edits apply immediately and disabling/deleting a user ends their existing session on their next request. Invited and disabled accounts get the same generic login error as a wrong password.
 - Invite/reset tokens: 32 random bytes, only the SHA-256 hash stored, single-use (consumed atomically), expiring (72h invite / 2h reset), and issuing a new one voids earlier unused ones.
 - PDO prepared statements for every query — no string-concatenated SQL anywhere in the codebase (confirmed: zero raw `->exec()` calls, zero variable-interpolated SQL strings).
-- CSRF token (session-bound, checked on POST) on every state-changing form, public and admin alike — confirmed all registered POST routes (30 at audit time, 40 after `feature/admin-users-rbac`) trace back to a `Csrf::verify()` check, and every check fails closed (blocks + redirects on mismatch, never silently continues).
+- CSRF token (session-bound, checked on POST) on every state-changing form, public and admin alike — confirmed all registered POST routes (30 at audit time, 40 after `feature/admin-users-rbac`) trace back to a `Csrf::verify()` check, and every check fails closed (blocks + redirects on mismatch, never silently continues). **Sole exception:** `POST /stripe/webhook` (server-to-server from Stripe), which is authenticated by `Stripe-Signature` verification instead and returns 400 on failure.
 - File uploads (team photos, partner logos, gallery images, site logo/favicon/footer logo, blog featured images) all go through one `App\Core\Upload::store()` helper: extension allowlist, actual file content checked against the claimed extension via `finfo` for raster formats, a max size cap, and a randomly-generated filename on save (the original filename is never trusted or reused). SVG uploads (logos only) are additionally scanned for `<script>` tags, `on*=` event-handler attributes, and `javascript:` URIs before being accepted — verified against both a clean and a deliberately malicious SVG through the real upload pipeline.
 - Session cookie hardened: `HttpOnly` always, `SameSite=Lax`, `Secure` auto-enabled when served over HTTPS.
 - `debug` config now derives from `APP_ENV` (off in production unless explicitly overridden via `APP_DEBUG`) instead of being hardcoded on; when off, uncaught exceptions show a generic message and log the real error server-side rather than leaking stack traces/file paths — verified directly (a test exception with a fake "sensitive" string appeared in the log but not in the HTTP response).
@@ -163,5 +172,8 @@ One feature branch per row, in order — each builds on the ones above it and sh
 | 17 | `feature/admin-blog-crud` | Post CRUD + comment moderation queue (approve/reject) | Publishing a post shows it on `/blog`; approving a comment shows it on the post |
 | 18 | `feature/admin-contact-story-crud` | Contact submissions inbox, Our Story content-block CRUD | Editing a stat/finance/letter block updates `/our-story` |
 | 19 | `polish/security-hardening-docs` | CSRF coverage audit, upload validation audit, prepared-statement audit, `README.md` setup/run instructions | Manual pass through the security notes checklist above |
+| 20 | `feature/stripe-donations` | stripe-php, Stripe settings, donation schemes + general donations via Stripe Checkout, signed idempotent webhook, receipt emails, admin schemes CRUD + donations ledger | Test-mode donation with `stripe listen` → row `paid`, receipt sent; replayed event sends nothing new |
+| 21 | `feature/shop-cart-orders` | Products, session cart, guest checkout via Stripe Checkout (shipping address, flat-rate shipping), order emails, admin products + orders (mark shipped) | Test-mode order → `paid`, stock decremented, confirmation email |
+| 22 | `feature/customer-accounts` | Optional customer sign-up/sign-in/reset, order + donation history, wishlist, profile + saved address; guest history linked only after email verification | See plan verification list |
 
 Branches 1–4 are foundation (not independently useful to an end user); 5–12 build out the full public site; 13–18 build out the back office; 19 closes out with a security/docs pass.

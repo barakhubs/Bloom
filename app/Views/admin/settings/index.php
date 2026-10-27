@@ -104,6 +104,42 @@ $val = fn (string $key) => htmlspecialchars($settings[$key] ?? '');
     </div>
 
     <div class="bg-white p-4 mb-4 shadow-sm">
+        <h5 class="mb-1">Payments (Stripe)</h5>
+        <p class="text-muted small mb-3">
+            Used for online donations. Find your keys under Developers &rarr; API keys in the Stripe dashboard.
+            Add a webhook endpoint pointing at <code><?= htmlspecialchars(\App\Core\Stripe::url('/stripe/webhook')) ?></code>
+            for the <code>checkout.session.*</code> events, then paste its signing secret below.
+        </p>
+        <?php if (!empty($errors['stripe'])): ?><div class="alert alert-danger"><?= htmlspecialchars($errors['stripe']) ?></div><?php endif; ?>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Secret Key
+                    <?php if (!empty($settings['stripe_secret_key'])): ?>
+                        <span class="badge <?= str_contains($settings['stripe_secret_key'], '_test_') ? 'bg-warning text-dark' : 'bg-primary text-dark' ?> ms-1">
+                            Configured (<?= str_contains($settings['stripe_secret_key'], '_test_') ? 'test mode' : 'live' ?>)
+                        </span>
+                    <?php endif; ?>
+                </label>
+                <input type="password" class="form-control" name="stripe_secret_key" autocomplete="off" placeholder="<?= !empty($settings['stripe_secret_key']) ? 'Leave blank to keep the current key' : 'sk_live_… or sk_test_…' ?>">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Webhook Signing Secret
+                    <?php if (!empty($settings['stripe_webhook_secret'])): ?><span class="badge bg-primary text-dark ms-1">Configured</span><?php endif; ?>
+                </label>
+                <input type="password" class="form-control" name="stripe_webhook_secret" autocomplete="off" placeholder="<?= !empty($settings['stripe_webhook_secret']) ? 'Leave blank to keep the current secret' : 'whsec_…' ?>">
+            </div>
+            <?php if (!empty($settings['stripe_secret_key']) || !empty($settings['stripe_webhook_secret'])): ?>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="stripe_clear" id="stripe_clear" value="1">
+                        <label class="form-check-label" for="stripe_clear">Remove the saved Stripe keys (turns off online payments)</label>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="bg-white p-4 mb-4 shadow-sm">
         <h5 class="mb-3">Logos</h5>
         <div class="row g-4">
             <div class="col-md-4">

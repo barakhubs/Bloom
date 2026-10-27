@@ -13,7 +13,7 @@
                     <h1 class="display-5 text-uppercase text-white mb-3">Transforming Lives with Knowledge, Care, and Courage</h1>
                     <p class="fs-5 text-white mb-5">Supporting children and women in need across Uganda and African immigrant families across the USA.</p>
                     <div class="d-flex">
-                        <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
+                        <a class="btn btn-primary py-3 px-4 me-3" href="/donate">Donate</a>
                         <a class="btn btn-secondary py-3 px-4" href="/our-story">Our Story</a>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                     <h2 class="display-5 text-uppercase text-white mb-3">Our Vision</h2>
                     <p class="fs-5 text-white mb-5">To create a world where every child and woman has access to the support needed for a healthy, empowered, and fulfilling life &mdash; one that thrives in harmony with a sustainable, climate-resilient planet.</p>
                     <div class="d-flex mt-4">
-                        <a class="btn btn-primary py-3 px-4 me-3" href="/contact">Donate</a>
+                        <a class="btn btn-primary py-3 px-4 me-3" href="/donate">Donate</a>
                         <a class="btn btn-secondary py-3 px-4" href="/our-services">Our Services</a>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                     <!-- <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
                         <div class="h-100 bg-primary p-4 text-center">
                             <p class="fs-5 text-dark">"Every child deserves access to opportunity and every woman deserves the chance to thrive."</p>
-                            <a class="btn btn-secondary py-2 px-4" href="/contact">Donate Now</a>
+                            <a class="btn btn-secondary py-2 px-4" href="/donate">Donate Now</a>
                         </div>
                     </div> -->
                 </div>
@@ -134,8 +134,8 @@
             </div>
             <div class="col-lg-5 donate-form bg-primary py-5 text-center wow fadeIn" data-wow-delay="0.5s">
                 <div class="h-100 p-5 d-flex flex-column justify-content-center">
-                    <p class="fs-5 text-dark mb-4">Every contribution helps us reach more families. Get in touch to make a donation.</p>
-                    <a href="/contact" class="btn btn-secondary py-3 w-100">Get in Touch</a>
+                    <p class="fs-5 text-dark mb-4">Every contribution helps us reach more families. Give any amount, or support a specific campaign.</p>
+                    <a href="/donate" class="btn btn-secondary py-3 w-100">Donate Now</a>
                 </div>
             </div>
         </div>

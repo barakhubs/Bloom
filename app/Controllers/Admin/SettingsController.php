@@ -65,6 +65,27 @@ class SettingsController extends AdminController
 
         $errors = [];
 
+        // Stripe secrets: same keep-unless-retyped rule as the SMTP password.
+        if (!empty($_POST['stripe_clear'])) {
+            Setting::set('stripe_secret_key', '');
+            Setting::set('stripe_webhook_secret', '');
+        } else {
+            $stripeSecretKey = trim((string) ($_POST['stripe_secret_key'] ?? ''));
+            $stripeWebhookSecret = trim((string) ($_POST['stripe_webhook_secret'] ?? ''));
+
+            if ($stripeSecretKey !== '' && !preg_match('/^(sk|rk)_(test|live)_[A-Za-z0-9]+$/', $stripeSecretKey)) {
+                $errors['stripe'] = "That doesn't look like a Stripe secret key (it should start with sk_live_ or sk_test_).";
+            } elseif ($stripeSecretKey !== '') {
+                Setting::set('stripe_secret_key', $stripeSecretKey);
+            }
+
+            if ($stripeWebhookSecret !== '' && !str_starts_with($stripeWebhookSecret, 'whsec_')) {
+                $errors['stripe'] = 'The webhook signing secret should start with whsec_.';
+            } elseif ($stripeWebhookSecret !== '') {
+                Setting::set('stripe_webhook_secret', $stripeWebhookSecret);
+            }
+        }
+
         try {
             $logoPath = Upload::store($_FILES['site_logo'] ?? [], 'logos', ['jpg', 'jpeg', 'png', 'webp', 'svg']);
             if ($logoPath !== null) {

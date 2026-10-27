@@ -149,6 +149,7 @@ $navLinks = [
                             <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                         <?php endforeach; ?>
                     </div>
+                    <a href="/donate" class="btn btn-secondary ms-auto py-2 px-4">Donate</a>
                 </div>
             </nav>
         </div>
@@ -167,6 +168,7 @@ $navLinks = [
                     <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
                 <?php endforeach; ?>
             </div>
+            <a href="/donate" class="btn btn-primary mt-4 py-3">Donate</a>
         </div>
     </div>
     <!-- Mobile Off-canvas Nav End -->

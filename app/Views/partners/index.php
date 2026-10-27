@@ -52,7 +52,7 @@ require dirname(__DIR__) . '/partials/page-header.php';
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endif; ?>
-                        <a href="/contact" class="btn btn-primary py-3 px-4 mt-2">Give Now</a>
+                        <a href="/donate" class="btn btn-primary py-3 px-4 mt-2">Give Now</a>
                     </div>
                 </div>
             </div>

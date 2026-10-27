@@ -35,6 +35,8 @@ use App\Controllers\Admin\BlogController as AdminBlogController;
 use App\Controllers\Admin\CommentsController as AdminCommentsController;
 use App\Controllers\Admin\ContactController as AdminContactController;
 use App\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Controllers\Admin\DonationSchemesController as AdminDonationSchemesController;
+use App\Controllers\Admin\DonationsController as AdminDonationsController;
 use App\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Controllers\Admin\PartnersController as AdminPartnersController;
 use App\Controllers\Admin\RolesController as AdminRolesController;
@@ -44,12 +46,14 @@ use App\Controllers\Admin\TeamController as AdminTeamController;
 use App\Controllers\Admin\UsersController as AdminUsersController;
 use App\Controllers\BlogController;
 use App\Controllers\ContactController;
+use App\Controllers\DonationController;
 use App\Controllers\GalleryController;
 use App\Controllers\HomeController;
 use App\Controllers\PartnersController;
 use App\Controllers\ServicesController;
 use App\Controllers\SitemapController;
 use App\Controllers\StoryController;
+use App\Controllers\StripeWebhookController;
 use App\Controllers\TeamController;
 use App\Core\Router;
 
@@ -66,6 +70,12 @@ $router->get('/blog/{slug}', [BlogController::class, 'show']);
 $router->post('/blog/{slug}/comments', [BlogController::class, 'submitComment']);
 $router->get('/contact', [ContactController::class, 'index']);
 $router->post('/contact', [ContactController::class, 'submit']);
+$router->get('/donate', [DonationController::class, 'index']);
+$router->post('/donate/checkout', [DonationController::class, 'checkout']);
+$router->get('/donate/thank-you', [DonationController::class, 'thankYou']);
+$router->get('/donate/{slug}', [DonationController::class, 'show']);
+// Server-to-server from Stripe: authenticated by the Stripe-Signature header, not CSRF.
+$router->post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 $router->get('/sitemap.xml', [SitemapController::class, 'index']);
 
 $router->get('/admin/login', [AdminAuthController::class, 'showLogin']);
@@ -131,6 +141,14 @@ $router->get('/admin/story/finance/{id}/edit', [AdminStoryController::class, 'ed
 $router->post('/admin/story/finance/{id}', [AdminStoryController::class, 'updateFinance']);
 $router->post('/admin/story/finance/{id}/delete', [AdminStoryController::class, 'destroyFinance']);
 $router->post('/admin/story/letter', [AdminStoryController::class, 'updateLetter']);
+
+$router->get('/admin/donations', [AdminDonationsController::class, 'index']);
+$router->get('/admin/donation-schemes', [AdminDonationSchemesController::class, 'index']);
+$router->get('/admin/donation-schemes/create', [AdminDonationSchemesController::class, 'create']);
+$router->post('/admin/donation-schemes', [AdminDonationSchemesController::class, 'store']);
+$router->get('/admin/donation-schemes/{id}/edit', [AdminDonationSchemesController::class, 'edit']);
+$router->post('/admin/donation-schemes/{id}', [AdminDonationSchemesController::class, 'update']);
+$router->post('/admin/donation-schemes/{id}/delete', [AdminDonationSchemesController::class, 'destroy']);
 
 $router->get('/admin/users', [AdminUsersController::class, 'index']);
 $router->get('/admin/users/create', [AdminUsersController::class, 'create']);
