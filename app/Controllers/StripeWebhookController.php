@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Mailer;
 use App\Core\Stripe;
+use App\Models\Customer;
 use App\Models\Donation;
 use App\Models\Order;
 use App\Models\Product;
@@ -67,6 +68,12 @@ class StripeWebhookController
 
                 if ($paid) {
                     $donation = $donations->findBySession($session->id);
+                    if ($donation['customer_id'] === null && !empty($donation['donor_email'])) {
+                        $account = (new Customer())->findVerifiedByEmail($donation['donor_email']);
+                        if ($account !== null) {
+                            $donations->attachCustomer((int) $donation['id'], (int) $account['id']);
+                        }
+                    }
                     Mailer::sendDonationReceipt($donation);
                     Mailer::sendDonationNotification($donation);
                 }
@@ -116,6 +123,13 @@ class StripeWebhookController
                 }
 
                 $order = $orders->findBySession($session->id);
+
+                if ($order['customer_id'] === null && !empty($order['customer_email'])) {
+                    $account = (new Customer())->findVerifiedByEmail($order['customer_email']);
+                    if ($account !== null) {
+                        $orders->attachCustomer((int) $order['id'], (int) $account['id']);
+                    }
+                }
 
                 if ((int) $session->amount_total !== (int) $order['total_cents']) {
                     error_log("Stripe webhook: order {$order['reference']} paid {$session->amount_total} but total is {$order['total_cents']}");

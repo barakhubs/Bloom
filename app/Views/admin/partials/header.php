@@ -27,6 +27,7 @@ $adminNavLinks = array_filter([
     '/admin/donation-schemes' => ['Donation Schemes', 'donations'],
     '/admin/orders' => ['Orders', 'orders'],
     '/admin/products' => ['Products', 'shop'],
+    '/admin/customers' => ['Customers', 'customers'],
     '/admin/users' => ['Users', 'users'],
     '/admin/roles' => ['Roles', 'users'],
     '/admin/account' => ['My Account', null],

@@ -7,7 +7,7 @@ Bloom Beyond Borders is a nonprofit supporting vulnerable children and women in 
 This project rebuilds it as a **vanilla PHP MVC** backend + **vanilla HTML/CSS/JS** frontend, using the free Bootstrap 5 template already in this folder ("Charitize" by HTML Codex) as the visual base — restyled to the org's brand colors and re-pointed at the real site's page set instead of the template's generic charity pages.
 
 **Non-goals (explicitly out of scope):**
-- ~~No shop/cart/e-commerce, no payment gateway integration.~~ Reversed by client request (2026-10-27): Stripe-powered donations (`feature/stripe-donations`) and a guest-checkout shop (`feature/shop-cart-orders`), with optional customer accounts to follow. See **Payments (Stripe)** below.
+- ~~No shop/cart/e-commerce, no payment gateway integration.~~ Reversed by client request (2026-10-27): Stripe-powered donations (`feature/stripe-donations`) a guest-checkout shop (`feature/shop-cart-orders`), and optional customer accounts (`feature/customer-accounts`). See **Payments (Stripe)** below.
 - No npm / JS build step / bundler — frontend stays static vanilla JS + the template's existing jQuery-plugin vendor libs.
 - No newsletter signup feature.
 - No multi-language (EN/FR) toggle — English only for v1.
@@ -48,6 +48,7 @@ Old template colors → new brand colors:
 | Gallery | `/gallery` | new page, extends the footer gallery grid — organized into **categorized albums** |
 | Blog | `/blog`, `/blog/{slug}` | new — no equivalent in the template; list view (cards) + single-post view with comment form + approved comments list |
 | Shop | `/shop`, `/shop/{slug}`, `/cart`, `/checkout/success` | `.donation-item` cards for products; session cart; guest checkout on Stripe's hosted page (email, phone, shipping address collected there). Hidden (404 + no nav link) until **Settings → Shop** is switched on |
+| Customer account | `/account/*` (register, login, forgot/reset, verify, orders, donations, wishlist, profile) | public layout + `account/_start.php`/`_end.php` sidebar layout. **Optional**: see Customer accounts below |
 | Contact | `/contact` | `contact.html` — form (name, email, subject, message) + honeypot, org phone/email/address, social links |
 | Donate | `/donate`, `/donate/{slug}`, `/donate/thank-you` | the template's `.donate` split-panel + `.donation-item` cards — general "any amount" form + active donation-scheme cards (progress bar when a goal is set); all Donate buttons/CTAs and a nav button link here |
 
@@ -58,7 +59,7 @@ Old template colors → new brand colors:
 Multiple back-office users with role-based permissions (client feedback, `feature/admin-users-rbac`). Login at `/admin/login`, session-based.
 
 **Users & permissions:**
-- Permissions are a fixed list in code, one per section: `App\Core\Permissions::ALL` (`settings`, `team`, `partners`, `gallery`, `blog`, `comments`, `story`, `contact`, `donations`, `shop`, `orders`, `users`). Dashboard and My Account are open to every logged-in user.
+- Permissions are a fixed list in code, one per section: `App\Core\Permissions::ALL` (`settings`, `team`, `partners`, `gallery`, `blog`, `comments`, `story`, `contact`, `donations`, `shop`, `orders`, `customers`, `users`). Dashboard and My Account are open to every logged-in user.
 - **Roles** (`/admin/roles`) — admins create custom roles and tick which sections each one can manage. The built-in **Super Admin** role (`roles.is_system = 1`) implicitly has everything and can't be edited or deleted. A role can't be deleted while users are assigned to it.
 - **Users** (`/admin/users`) — admin enters name + email + role, and the user gets a single-use **invite link** (72h) by email to set their own password. Admins can resend invites, send password-reset links (2h), and enable/disable or delete users. If SMTP isn't configured, the link is shown to the admin to copy and send themselves.
 - Guards: you can't delete or disable yourself or change your own role; the last active Super Admin can't be removed or demoted; only a Super Admin can grant the Super Admin role or edit/delete a Super Admin.
@@ -74,6 +75,7 @@ Multiple back-office users with role-based permissions (client feedback, `featur
 - **Blog** — CRUD for posts (title, slug, body, featured image, published/draft, date); comment moderation queue (approve/reject, flat list per post).
 - **Contact submissions** — inbox/list of submitted contact-form messages.
 - **Shop** — Products (`shop` permission: name, slug, summary, description, price, image, stock, active, sort order) and Orders (`orders` permission: filter by status, detail with items + ship-to address, **Mark shipped** → emails the buyer, **Cancel** with optional restock after refunding in Stripe). Shop on/off, flat shipping rate, and ship-to countries live in Site Settings.
+- **Customers** (`customers` permission): list/search customer accounts, view their orders + donations, email a password-reset link, or delete (orders/donations are kept, unlinked). Admins never see or set customer passwords.
 - **Donations** (`donations` permission) — Donation Schemes CRUD (name, slug, summary, description, image, suggested amounts, allow-custom-amount, optional goal, active, sort order) and a read-only donations ledger (filter by status/scheme, totals, link to the Stripe payment). Refunds happen in the Stripe dashboard.
 - **Our Story content blocks** — editable fields for: impact-stats counters (label + number, repeatable), financial-allocation chart data (year + category + percentage, repeatable), board letter (author name/title + body text). Seed these with the current live-site placeholder text as starting content.
 
@@ -122,6 +124,20 @@ Implemented in `database/schema.sql`, seeded via `database/seed.sql` — both ve
 - `products` (id, name, slug unique, summary, description, price_cents, image_path, stock, is_active, sort_order, created_at)
 - `orders` (id, reference unique e.g. `BBB-7K3Q9X`, customer_name/email/phone, ship_name/line1/line2/city/state/postal_code/country, subtotal_cents, shipping_cents, total_cents, currency, status[pending/paid/shipped/cancelled/expired], stripe_session_id unique, stripe_payment_intent_id, created_at, paid_at, shipped_at)
 - `order_items` (id, order_id FK → orders ON DELETE CASCADE, product_id FK → products ON DELETE SET NULL, product_name + unit_price_cents snapshots, quantity). Existing DBs: apply `database/migrations/2026-10-27_shop.sql`
+- `customers` (id, name, email unique, password_hash, phone, email_verified_at, stripe_customer_id, ship_line1/line2/city/state/postal_code/country, created_at, last_login_at)
+- `customer_tokens` (same shape and rules as `admin_user_tokens`, purpose[verify/reset], 48h verify / 2h reset)
+- `wishlist_items` (customer_id FK CASCADE, product_id FK CASCADE, created_at; PK both)
+- `orders.customer_id` / `donations.customer_id`: nullable FK → customers ON DELETE SET NULL. Existing DBs: apply `database/migrations/2026-10-27_customer_accounts.sql`
+
+## Customer accounts
+
+Added at the user's request on top of the client's "no accounts" brief, so **guest checkout and guest donations stay the default and never require an account**.
+- `App\Core\CustomerAuth` mirrors `Auth` but uses its own session key (`customer_id`), so admin and customer sessions never interfere. `CustomerController` is the base for signed-in `/account` pages (signed-out visitors are redirected to `/account/login?next=…`; `CustomerAuth::safeNext()` only allows local paths).
+- Register / forgot-password give the same response whether or not the email exists. Registering with an existing email sends that owner a verify or reset link instead of creating a duplicate.
+- **Guest history is linked only after the email is proven**: on verification (or a password reset, since that link went to the same inbox), `Customer::linkGuestHistory()` attaches `customer_id IS NULL` orders/donations with that email. The webhook also links new guest purchases to a *verified* account with the same email. Changing email resets verification and voids every outstanding token.
+- Orders/donations placed while signed in carry `customer_id` from the start and show in the account immediately. Account order pages are scoped `WHERE customer_id = ?`, so other references 404.
+- Signed-in checkout creates/refreshes a Stripe Customer (`Stripe::customerFor()`) so Checkout pre-fills email, name and saved address; on any Stripe error it falls back to the guest flow. Donations just pre-fill `customer_email`.
+- No self-service cancellation: customers contact the org, and admins cancel/refund.
 
 ## Payments (Stripe)
 
@@ -180,6 +196,6 @@ One feature branch per row, in order — each builds on the ones above it and sh
 | 19 | `polish/security-hardening-docs` | CSRF coverage audit, upload validation audit, prepared-statement audit, `README.md` setup/run instructions | Manual pass through the security notes checklist above |
 | 20 | `feature/stripe-donations` | stripe-php, Stripe settings, donation schemes + general donations via Stripe Checkout, signed idempotent webhook, receipt emails, admin schemes CRUD + donations ledger | Test-mode donation with `stripe listen` → row `paid`, receipt sent; replayed event sends nothing new |
 | 21 | `feature/shop-cart-orders` | Products, session cart, guest checkout via Stripe Checkout (shipping address, flat-rate shipping), order emails, admin products + orders (mark shipped / cancel), shop on/off + shipping settings | Test-mode order → `paid`, stock decremented, confirmation email |
-| 22 | `feature/customer-accounts` | Optional customer sign-up/sign-in/reset, order + donation history, wishlist, profile + saved address; guest history linked only after email verification | See plan verification list |
+| 22 | `feature/customer-accounts` | Optional customer sign-up/sign-in/reset, order + donation history, wishlist, profile + saved address, Stripe pre-fill, admin Customers; guest history linked only after email verification | Guest order → register same email → hidden until verified, then listed; another customer's order reference 404s |
 
 Branches 1–4 are foundation (not independently useful to an end user); 5–12 build out the full public site; 13–18 build out the back office; 19 closes out with a security/docs pass.

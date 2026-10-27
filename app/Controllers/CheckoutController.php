@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Cart;
 use App\Core\Controller;
 use App\Core\Csrf;
+use App\Core\CustomerAuth;
 use App\Core\Money;
 use App\Core\Shop;
 use App\Core\Stripe;
@@ -74,12 +75,22 @@ class CheckoutController extends Controller
         }
 
         $shippingCents = Shop::shippingCents();
+        $customer = CustomerAuth::user();
         $orders = new Order();
-        $order = $orders->createPending($items, $shippingCents, Money::CURRENCY);
+        $order = $orders->createPending($items, $shippingCents, Money::CURRENCY, $customer['id'] ?? null);
         $metadata = ['type' => 'order', 'order_id' => (string) $order['id'], 'order_reference' => $order['reference']];
 
+        // Signed in: attach a Stripe Customer so the email + saved address are pre-filled.
+        $customerParams = [];
+        if ($customer !== null) {
+            $stripeCustomerId = Stripe::customerFor($customer);
+            $customerParams = $stripeCustomerId !== null
+                ? ['customer' => $stripeCustomerId, 'customer_update' => ['shipping' => 'auto', 'name' => 'auto']]
+                : ['customer_email' => $customer['email']];
+        }
+
         try {
-            $session = $client->checkout->sessions->create([
+            $session = $client->checkout->sessions->create($customerParams + [
                 'mode' => 'payment',
                 'line_items' => $lineItems,
                 'shipping_address_collection' => ['allowed_countries' => $countries],

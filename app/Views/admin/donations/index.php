@@ -78,6 +78,7 @@ $stripeBase = 'https://dashboard.stripe.com/' . ($testMode ? 'test/' : '') . 'pa
                     <td class="small text-nowrap"><?= htmlspecialchars(date('j M Y, H:i', strtotime((string) ($donation['paid_at'] ?? $donation['created_at'])))) ?></td>
                     <td>
                         <?= htmlspecialchars($donation['donor_name'] ?: '—') ?>
+                        <?php if (!empty($donation['customer_id'])): ?><span class="badge bg-secondary ms-1" title="Has a customer account">Account</span><?php endif; ?>
                         <?php if (!empty($donation['donor_email'])): ?>
                             <div class="small"><a href="mailto:<?= htmlspecialchars($donation['donor_email']) ?>"><?= htmlspecialchars($donation['donor_email']) ?></a></div>
                         <?php endif; ?>

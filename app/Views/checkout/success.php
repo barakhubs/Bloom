@@ -41,6 +41,13 @@ require dirname(__DIR__) . '/partials/page-header.php';
             </div>
         <?php endif; ?>
 
+        <?php if ($confirmed && !\App\Core\CustomerAuth::check()): ?>
+            <div class="border p-4 mt-4 text-center">
+                <p class="mb-2"><strong>Want to track this order?</strong> Create a free account with the same email. Once you confirm it, this order will appear in your account.</p>
+                <a href="/account/register<?= $email ? '?email=' . htmlspecialchars(rawurlencode($email)) : '' ?>" class="btn btn-outline-secondary">Create an Account</a>
+            </div>
+        <?php endif; ?>
+
         <div class="text-center mt-4">
             <a href="/shop" class="btn btn-primary py-3 px-4 me-2">Continue Shopping</a>
             <a href="/" class="btn btn-secondary py-3 px-4">Back to Home</a>

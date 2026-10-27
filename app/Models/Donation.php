@@ -13,12 +13,12 @@ class Donation extends Model
     public const STATUSES = ['pending', 'paid', 'expired', 'failed'];
 
     /** Inserts a pending donation and returns its id. */
-    public function createPending(?int $schemeId, int $amountCents, string $currency, ?string $message): int
+    public function createPending(?int $schemeId, int $amountCents, string $currency, ?string $message, ?int $customerId = null): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO donations (scheme_id, amount_cents, currency, message) VALUES (?, ?, ?, ?)'
+            'INSERT INTO donations (scheme_id, amount_cents, currency, message, customer_id) VALUES (?, ?, ?, ?, ?)'
         );
-        $stmt->execute([$schemeId, $amountCents, $currency, $message]);
+        $stmt->execute([$schemeId, $amountCents, $currency, $message, $customerId]);
 
         return (int) $this->db->lastInsertId();
     }
@@ -101,6 +101,41 @@ class Donation extends Model
         $stmt->execute($params);
 
         return $stmt->fetchAll();
+    }
+
+    /** A customer's paid donations (with scheme_name), newest first. */
+    public function listForCustomer(int $customerId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.*, s.name AS scheme_name FROM donations d
+             LEFT JOIN donation_schemes s ON s.id = d.scheme_id
+             WHERE d.customer_id = ? AND d.status = 'paid'
+             ORDER BY d.paid_at DESC"
+        );
+        $stmt->execute([$customerId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /** One of a customer's paid donations; null if it isn't theirs. */
+    public function findForCustomer(int $id, int $customerId): ?array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.*, s.name AS scheme_name FROM donations d
+             LEFT JOIN donation_schemes s ON s.id = d.scheme_id
+             WHERE d.id = ? AND d.customer_id = ? AND d.status = 'paid'"
+        );
+        $stmt->execute([$id, $customerId]);
+        $row = $stmt->fetch();
+
+        return $row !== false ? $row : null;
+    }
+
+    /** Links a paid guest donation to a verified account with the same email. */
+    public function attachCustomer(int $id, int $customerId): void
+    {
+        $stmt = $this->db->prepare('UPDATE donations SET customer_id = ? WHERE id = ? AND customer_id IS NULL');
+        $stmt->execute([$customerId, $id]);
     }
 
     /** Paid totals: ['count' => int, 'cents' => int]. */

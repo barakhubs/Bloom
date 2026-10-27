@@ -20,7 +20,7 @@ class Order extends Model
      *
      * @param array<int, array{product_id: int, name: string, unit_price_cents: int, quantity: int}> $items
      */
-    public function createPending(array $items, int $shippingCents, string $currency): array
+    public function createPending(array $items, int $shippingCents, string $currency, ?int $customerId = null): array
     {
         $subtotal = 0;
         foreach ($items as $item) {
@@ -31,14 +31,14 @@ class Order extends Model
 
         try {
             $orderStmt = $this->db->prepare(
-                'INSERT INTO orders (reference, subtotal_cents, shipping_cents, total_cents, currency) VALUES (?, ?, ?, ?, ?)'
+                'INSERT INTO orders (reference, subtotal_cents, shipping_cents, total_cents, currency, customer_id) VALUES (?, ?, ?, ?, ?, ?)'
             );
 
             // A reference collision is astronomically unlikely, but retry rather than fail the checkout.
             for ($attempt = 0; ; $attempt++) {
                 $reference = self::newReference();
                 try {
-                    $orderStmt->execute([$reference, $subtotal, $shippingCents, $subtotal + $shippingCents, $currency]);
+                    $orderStmt->execute([$reference, $subtotal, $shippingCents, $subtotal + $shippingCents, $currency, $customerId]);
                     break;
                 } catch (\PDOException $e) {
                     if ($attempt >= 4 || $e->getCode() !== '23000') {
@@ -144,6 +144,39 @@ class Order extends Model
         $row = $stmt->fetch();
 
         return $row !== false ? $this->withItems($row) : null;
+    }
+
+    /** A customer's own orders (pending ones excluded), newest first, with an item count. */
+    public function listForCustomer(int $customerId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT o.*, (SELECT COALESCE(SUM(quantity), 0) FROM order_items WHERE order_id = o.id) AS item_count
+             FROM orders o
+             WHERE o.customer_id = ? AND o.status IN ('paid', 'shipped', 'cancelled')
+             ORDER BY o.created_at DESC"
+        );
+        $stmt->execute([$customerId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /** One of a customer's orders by reference; null if it isn't theirs (so it 404s). */
+    public function findForCustomer(string $reference, int $customerId): ?array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM orders WHERE reference = ? AND customer_id = ? AND status IN ('paid', 'shipped', 'cancelled')"
+        );
+        $stmt->execute([$reference, $customerId]);
+        $row = $stmt->fetch();
+
+        return $row !== false ? $this->withItems($row) : null;
+    }
+
+    /** Links a paid guest order to a verified account with the same email. */
+    public function attachCustomer(int $id, int $customerId): void
+    {
+        $stmt = $this->db->prepare('UPDATE orders SET customer_id = ? WHERE id = ? AND customer_id IS NULL');
+        $stmt->execute([$customerId, $id]);
     }
 
     /** Admin list, newest 500 first, with an item count. */

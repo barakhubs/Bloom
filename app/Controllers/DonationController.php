@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Csrf;
+use App\Core\CustomerAuth;
 use App\Core\Money;
 use App\Core\Stripe;
 use App\Models\Donation;
@@ -132,13 +133,14 @@ class DonationController extends Controller
             $this->redirectWithErrors($backTo, ['general' => 'Online giving is temporarily unavailable. Please contact us to make a donation.'], $old);
         }
 
+        $customer = CustomerAuth::user();
         $donations = new Donation();
-        $donationId = $donations->createPending($scheme['id'] ?? null, $amountCents, Money::CURRENCY, $message !== '' ? $message : null);
+        $donationId = $donations->createPending($scheme['id'] ?? null, $amountCents, Money::CURRENCY, $message !== '' ? $message : null, $customer['id'] ?? null);
         $label = $scheme !== null ? 'Donation: ' . $scheme['name'] : 'Donation to Bloom Beyond Borders';
         $metadata = ['type' => 'donation', 'donation_id' => (string) $donationId];
 
         try {
-            $session = $client->checkout->sessions->create([
+            $session = $client->checkout->sessions->create(($customer !== null ? ['customer_email' => $customer['email']] : []) + [
                 'mode' => 'payment',
                 'submit_type' => 'donate',
                 'line_items' => [[
