@@ -30,8 +30,10 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <h4 class="text-white mb-4">Quick Links</h4>
-                    <?php foreach ($navLinks as $href => $label): ?>
-                        <a class="btn btn-link" href="<?= htmlspecialchars($href) ?>"><?= htmlspecialchars($label) ?></a>
+                    <?php foreach ($navLinks as $href => $item): ?>
+                        <?php foreach (is_array($item) ? $item['children'] : [$href => $item] as $linkHref => $linkLabel): ?>
+                            <a class="btn btn-link" href="<?= htmlspecialchars($linkHref) ?>"><?= htmlspecialchars($linkLabel) ?></a>
+                        <?php endforeach; ?>
                     <?php endforeach; ?>
                 </div>
                 <div class="col-lg-4 col-md-6">
