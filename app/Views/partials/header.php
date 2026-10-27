@@ -25,12 +25,18 @@ $canonicalUrl = rtrim($appConfig['base_url'], '/') . $currentPath;
 
 $settings = Setting::all();
 
+// href => label, or key => ['label' => ..., 'children' => [href => label]] for a dropdown.
 $navLinks = [
     '/' => 'Home',
-    '/our-story' => 'Our Story',
+    'who-we-are' => [
+        'label' => 'Who We Are',
+        'children' => [
+            '/our-story' => 'Our Story',
+            '/our-team' => 'Our Team',
+            '/partners' => 'Partners',
+        ],
+    ],
     '/our-services' => 'Our Services',
-    '/our-team' => 'Our Team',
-    '/partners' => 'Partners',
     '/gallery' => 'Gallery',
     '/blog' => 'Blog',
     '/contact' => 'Contact',
@@ -155,8 +161,20 @@ $currentCustomer = CustomerAuth::user();
                 <!-- Desktop nav (lg and up); mobile uses the offcanvas panel below instead -->
                 <div class="d-none d-lg-flex align-items-center flex-grow-1">
                     <div class="navbar-nav">
-                        <?php foreach ($navLinks as $href => $label): ?>
-                            <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
+                        <?php foreach ($navLinks as $href => $item): ?>
+                            <?php if (is_array($item)): ?>
+                                <?php $groupActive = array_key_exists($currentPath, $item['children']); ?>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle<?= $groupActive ? ' active' : '' ?>" id="nav-<?= htmlspecialchars($href) ?>" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?= htmlspecialchars($item['label']) ?></a>
+                                    <div class="dropdown-menu bg-light m-0" aria-labelledby="nav-<?= htmlspecialchars($href) ?>">
+                                        <?php foreach ($item['children'] as $childHref => $childLabel): ?>
+                                            <a href="<?= htmlspecialchars($childHref) ?>" class="dropdown-item<?= $currentPath === $childHref ? ' active' : '' ?>"<?= $currentPath === $childHref ? ' aria-current="page"' : '' ?>><?= htmlspecialchars($childLabel) ?></a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"<?= $currentPath === $href ? ' aria-current="page"' : '' ?>><?= htmlspecialchars($item) ?></a>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
                     <div class="dropdown ms-auto me-3">
@@ -204,8 +222,15 @@ $currentCustomer = CustomerAuth::user();
         </div>
         <div class="offcanvas-body d-flex flex-column">
             <div class="navbar-nav">
-                <?php foreach ($navLinks as $href => $label): ?>
-                    <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($label) ?></a>
+                <?php foreach ($navLinks as $href => $item): ?>
+                    <?php if (is_array($item)): ?>
+                        <span class="nav-item nav-link nav-group-label"><?= htmlspecialchars($item['label']) ?></span>
+                        <?php foreach ($item['children'] as $childHref => $childLabel): ?>
+                            <a href="<?= htmlspecialchars($childHref) ?>" class="nav-item nav-link nav-sub-link<?= $currentPath === $childHref ? ' active' : '' ?>"><?= htmlspecialchars($childLabel) ?></a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <a href="<?= htmlspecialchars($href) ?>" class="nav-item nav-link<?= $currentPath === $href ? ' active' : '' ?>"><?= htmlspecialchars($item) ?></a>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </div>
             <a href="/account" class="btn btn-outline-light mt-4 py-3"><i class="fa fa-user me-2"></i><?= $currentCustomer !== null ? 'My Account' : 'Sign In' ?></a>
