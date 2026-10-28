@@ -1,0 +1,7 @@
+# Only public/ should be the web root. If Apache ends up serving this folder
+# instead (e.g. a misconfigured XAMPP/shared host), at least never hand out
+# dotfiles like .env (DB password, Stripe keys) or .git.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+RedirectMatch 404 /\.git

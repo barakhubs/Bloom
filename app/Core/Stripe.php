@@ -8,33 +8,52 @@ use Stripe\Event;
 use Stripe\StripeClient;
 
 /**
- * Thin wrapper around the Stripe SDK, configured from the admin-managed
- * `stripe_secret_key` / `stripe_webhook_secret` settings. Payments use hosted
+ * Thin wrapper around the Stripe SDK. Keys come from the STRIPE_SECRET_KEY /
+ * STRIPE_WEBHOOK_SECRET environment variables (.env) when set, otherwise from
+ * the admin-managed `stripe_secret_key` / `stripe_webhook_secret` settings. Payments use hosted
  * Stripe Checkout, so card details never touch this server.
  */
 class Stripe
 {
     private static ?StripeClient $client = null;
 
+    /** The secret key in use: STRIPE_SECRET_KEY from the environment wins over the setting. */
+    public static function secretKey(): string
+    {
+        return trim((string) getenv('STRIPE_SECRET_KEY')) ?: trim(Setting::get('stripe_secret_key'));
+    }
+
+    /** The webhook signing secret in use: STRIPE_WEBHOOK_SECRET wins over the setting. */
+    public static function webhookSecret(): string
+    {
+        return trim((string) getenv('STRIPE_WEBHOOK_SECRET')) ?: trim(Setting::get('stripe_webhook_secret'));
+    }
+
+    /** True when a key is set in the environment, so the admin settings field has no effect. */
+    public static function keysFromEnv(): bool
+    {
+        return trim((string) getenv('STRIPE_SECRET_KEY')) !== '' || trim((string) getenv('STRIPE_WEBHOOK_SECRET')) !== '';
+    }
+
     public static function isConfigured(): bool
     {
-        return trim(Setting::get('stripe_secret_key')) !== '';
+        return self::secretKey() !== '';
     }
 
     /** True when the configured key is a test-mode key (sk_test_ / rk_test_). */
     public static function isTestMode(): bool
     {
-        return str_contains(Setting::get('stripe_secret_key'), '_test_');
+        return str_contains(self::secretKey(), '_test_');
     }
 
     /** A client for the configured secret key, or null (logged) if Stripe isn't set up. */
     public static function client(): ?StripeClient
     {
         if (self::$client === null) {
-            $secretKey = trim(Setting::get('stripe_secret_key'));
+            $secretKey = self::secretKey();
 
             if ($secretKey === '') {
-                error_log('Stripe: secret key not configured in settings.');
+                error_log('Stripe: secret key not configured (.env or settings).');
 
                 return null;
             }
@@ -53,7 +72,7 @@ class Stripe
      */
     public static function verifyWebhook(string $payload, string $signatureHeader): Event
     {
-        $secret = trim(Setting::get('stripe_webhook_secret'));
+        $secret = self::webhookSecret();
 
         if ($secret === '') {
             throw new \RuntimeException('Stripe webhook secret not configured.');

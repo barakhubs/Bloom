@@ -110,6 +110,9 @@ $val = fn (string $key) => htmlspecialchars($settings[$key] ?? '');
             Add a webhook endpoint pointing at <code><?= htmlspecialchars(\App\Core\Stripe::url('/stripe/webhook')) ?></code>
             for the <code>checkout.session.*</code> events, then paste its signing secret below.
         </p>
+        <?php if (\App\Core\Stripe::keysFromEnv()): ?>
+            <div class="alert alert-info small">Stripe keys are set in the server's <code>.env</code> file and take priority over anything saved here.</div>
+        <?php endif; ?>
         <?php if (!empty($errors['stripe'])): ?><div class="alert alert-danger"><?= htmlspecialchars($errors['stripe']) ?></div><?php endif; ?>
         <div class="row g-3">
             <div class="col-md-6">

@@ -149,7 +149,9 @@ are logged, not sent. Admins can look up accounts under `/admin/customers`.
 
 ## Environment variables
 
-All optional; sensible local defaults apply if unset.
+All optional; sensible local defaults apply if unset. Put them in a `.env` file
+in the project root (`cp .env.example .env`; it is git-ignored) or set them in
+the server environment, which takes priority over the file.
 
 | Variable | Purpose | Default |
 |---|---|---|
@@ -157,6 +159,8 @@ All optional; sensible local defaults apply if unset.
 | `APP_DEBUG` | Force error display on/off, overriding the `APP_ENV`-based default | debug on unless `APP_ENV=production` |
 | `APP_URL` | Public base URL, used for emailed links and Stripe redirect URLs — must be set in production | `http://localhost:8000` |
 | `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Database connection | `127.0.0.1`, `3306`, `bloom`, `root`, *(empty)* |
+| `MAIL_FROM_EMAIL`, `MAIL_FROM_NAME` | Fallback sender identity (SMTP itself is configured in Admin → Settings) | `no-reply@bloombeyondborders.org`, `Bloom Beyond Borders` |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Stripe keys; override the ones saved in Admin → Settings → Payments | *(use the saved settings)* |
 
 **Production checklist:** set `APP_ENV=production` (this alone turns off
 error display and switches to a generic error page + server-side logging —
