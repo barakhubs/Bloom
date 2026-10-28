@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+\App\Core\Env::load(dirname(__DIR__) . '/.env');
+
 $appConfig = require dirname(__DIR__) . '/app/Config/app.php';
 
 error_reporting(E_ALL);
@@ -26,8 +30,6 @@ session_set_cookie_params([
     'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
 ]);
 session_start();
-
-require dirname(__DIR__) . '/vendor/autoload.php';
 
 use App\Controllers\Admin\AccountController as AdminAccountController;
 use App\Controllers\AccountController;
